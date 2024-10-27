@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     # Local
     "accounts",
     "pages",
+    "blogs.apps.BlogsConfig",
 ]
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#middleware

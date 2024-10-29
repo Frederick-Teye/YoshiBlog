@@ -1,10 +1,10 @@
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
 from django.views.decorators.http import require_POST
-from .forms import CommentForm
+from .forms import CommentForm, BlogForm
 from .models import Blog, Comment, Like
 
 # Create your views here.
@@ -29,3 +29,16 @@ def blog_detail_view(request, id):
     context = {"blog": blog, "comments": comments, "form": form}
     template = "blog_detail.html"
     TemplateResponse(request, template, context)
+
+
+@login_required
+def blog_create_view(request):
+    if request.method == "POST":
+        form = BlogForm(request.POST)
+        if form.is_valid():
+            form.instance.author = request.user
+            blog_model_instance = form.save()
+            return redirect("blog_detail", pk=blog_model_instance.pk)
+    else:
+        form = BlogForm()
+        TemplateResponse(request, "blog_new.html", {"form": form})

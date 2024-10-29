@@ -15,9 +15,10 @@ class Blog(models.Model):
         return self.title
 
 
-class Comment(models.Model):  # new
+class Comment(models.Model):
     blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
     comment = models.CharField(max_length=140)
+    created_at = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -25,3 +26,21 @@ class Comment(models.Model):  # new
 
     def __str__(self):
         return self.comment
+
+
+class Like(models.Model):
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+    )
+    comment = models.ForeignKey(
+        Comment,
+        on_delete=models.CASCADE,
+        related_name="likes",
+    )
+
+    class Meta:
+        unique_together = (
+            "user",
+            "comment",
+        )  # Ensure a user can like a comment only once

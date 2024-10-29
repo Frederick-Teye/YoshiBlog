@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
@@ -9,6 +10,7 @@ from .models import Blog, Comment, Like
 # Create your views here.
 
 
+@login_required
 def blog_list_view(request):
     blogs = Blog.objects.all()
     paginator = Paginator(blogs, 5)  # Show 5 blogs per page.
@@ -18,6 +20,7 @@ def blog_list_view(request):
     TemplateResponse(request, template, {"page_obj": page_obj})
 
 
+@login_required
 def blog_detail_view(request, id):
     blog = get_object_or_404(Blog.objects.all(), id=id)
     blog_instance = Blog.objects.get(id=id)

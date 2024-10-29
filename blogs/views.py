@@ -1,5 +1,6 @@
 from django.core.paginator import Paginator
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
 from django.views.decorators.http import require_POST
 from .forms import CommentForm
@@ -15,3 +16,13 @@ def blog_list_view(request):
     page_obj = paginator.get_page(page_number)
     template = "blog_list.html"
     TemplateResponse(request, template, {"page_obj": page_obj})
+
+
+def blog_detail_view(request, id):
+    blog = get_object_or_404(Blog.objects.all(), id=id)
+    blog_instance = Blog.objects.get(id=id)
+    comments = blog_instance.blog.all()
+    form = CommentForm()
+    context = {"blog": blog, "comments": comments, "form": form}
+    template = "blog_detail.html"
+    TemplateResponse(request, template, context)

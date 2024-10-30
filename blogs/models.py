@@ -43,7 +43,7 @@ class CommentLike(models.Model):
 
     class Meta:
         unique_together = (
-            "user",
+            "author",
             "comment",
         )  # Ensure a user can like a comment only once
 
@@ -61,6 +61,6 @@ class BlogLike(models.Model):
 
     class Meta:
         unique_together = (
-            "user",
+            "author",
             "blog",
         )  # Ensure a user can like a blog only once

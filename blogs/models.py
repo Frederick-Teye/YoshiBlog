@@ -30,7 +30,7 @@ class Comment(models.Model):
         return self.comment
 
 
-class Like(models.Model):
+class CommentLike(models.Model):
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -46,3 +46,21 @@ class Like(models.Model):
             "user",
             "comment",
         )  # Ensure a user can like a comment only once
+
+
+class BlogLike(models.Model):
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+    )
+    blog = models.ForeignKey(
+        Blog,
+        on_delete=models.CASCADE,
+        related_name="likes",
+    )
+
+    class Meta:
+        unique_together = (
+            "user",
+            "blog",
+        )  # Ensure a user can like a blog only once

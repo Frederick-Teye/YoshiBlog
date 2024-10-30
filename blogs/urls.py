@@ -7,7 +7,7 @@ from .views import (
 )
 
 urlpatterns = [
-    path("<int:pk>", blog_detail_view, name="blog_detail"),
+    path("<int:pk>/", blog_detail_view, name="blog_detail"),
     path("new/", blog_create_view, name="blog_new"),
     path("", blog_list_view, name="blog_list"),
 ]

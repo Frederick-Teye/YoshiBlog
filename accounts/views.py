@@ -16,4 +16,4 @@ def profile_update(request):
     else:
         form = ProfileUpdateForm(instance=request.user)
 
-    return render(request, "accounts/profile_update.html", {"form": form})
+    return render(request, "account/profile_update.html", {"form": form})

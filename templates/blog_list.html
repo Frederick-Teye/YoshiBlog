@@ -1,0 +1,15 @@
+{% extends '_base.html' %}
+{% block title %} Blogs {% endblock title %}
+
+{% block content %}
+    <div>
+        {% for blog in page_obj.object_list %}
+        <h2>{{ blog.title }}</h2>
+        <p>{{ blog.body }}</p>
+        <p>Created by {{ blog.author.get_full_name }}</p>
+        <hr><br>
+        {% empty %}
+        <p>Sorry, no blogs in this list.</p>
+        {% endfor %}
+    </div>
+{% endblock content %}

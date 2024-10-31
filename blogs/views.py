@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
 from django.views.decorators.http import require_POST
 from .forms import CommentForm, BlogForm
-from .models import Blog, Comment, Like
+from .models import Blog, Comment, BlogLike
 
 # Create your views here.
 
@@ -17,18 +17,18 @@ def blog_list_view(request):
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
     template = "blog_list.html"
-    TemplateResponse(request, template, {"page_obj": page_obj})
+    return TemplateResponse(request, template, {"page_obj": page_obj})
 
 
 @login_required
-def blog_detail_view(request, id):
-    blog = get_object_or_404(Blog.objects.all(), id=id)
-    blog_instance = Blog.objects.get(id=id)
-    comments = blog_instance.blog.all()
+def blog_detail_view(request, pk):
+    blog = get_object_or_404(Blog.objects.all(), pk=pk)
+    blog_instance = Blog.objects.get(pk=pk)
+    comments = blog_instance.comments.all()
     form = CommentForm()
     context = {"blog": blog, "comments": comments, "form": form}
     template = "blog_detail.html"
-    TemplateResponse(request, template, context)
+    return TemplateResponse(request, template, context)
 
 
 @login_required
@@ -38,7 +38,11 @@ def blog_create_view(request):
         if form.is_valid():
             form.instance.author = request.user
             blog_model_instance = form.save()
+            print(
+                f"\n\n this is the pk of the form saved: {blog_model_instance.pk}\n\n"
+            )
             return redirect("blog_detail", pk=blog_model_instance.pk)
     else:
         form = BlogForm()
-        TemplateResponse(request, "blog_new.html", {"form": form})
+
+    return TemplateResponse(request, "blog_new.html", {"form": form})

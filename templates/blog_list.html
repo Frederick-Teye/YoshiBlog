@@ -3,6 +3,11 @@
 
 {% block content %}
     <div>
+        <div class="text-field-container">
+            <div class="text-field">What's on your mind {{request.user.first_name}}?</div>
+        </div>
+    </div>
+    <div>
         {% for blog in page_obj.object_list %}
         <h2>{{ blog.title }}</h2>
         <p>{{ blog.body }}</p>

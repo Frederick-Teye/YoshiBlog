@@ -49,7 +49,7 @@ def blog_create_view(request):
 def blog_update_view(request, pk):
     blog = get_object_or_404(Blog.objects.all(), pk=pk)
     if request.method == "POST":
-        form = BlogForm(request.POST)
+        form = BlogForm(request.POST, instance=blog)
         if form.is_valid():
             form.instance.author = request.user
             blog_model_instance = form.save()

@@ -43,3 +43,18 @@ def blog_create_view(request):
         form = BlogForm()
 
     return TemplateResponse(request, "blog_new.html", {"form": form})
+
+
+@login_required
+def blog_update_view(request, pk):
+    blog = get_object_or_404(Blog.objects.all(), pk=pk)
+    if request.method == "POST":
+        form = BlogForm(request.POST)
+        if form.is_valid():
+            form.instance.author = request.user
+            blog_model_instance = form.save()
+            return redirect("blog_detail", pk=blog_model_instance.pk)
+    else:
+        form = BlogForm(instance=blog)
+
+    return TemplateResponse(request, "blog_edit.html", {"form": form})

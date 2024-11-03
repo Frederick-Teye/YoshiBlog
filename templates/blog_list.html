@@ -3,8 +3,10 @@
 
 {% block content %}
     <div>
-        <div class="text-field-container">
-            <div class="text-field">What's on your mind {{request.user.first_name}}?</div>
+        <div id="text-field-container" aria-label="Click to add blog post">
+            <a href="{% url 'blog_new' %}" aria-hidden="true" id="add-blog-link">
+                What's on your mind {{request.user.first_name}}?
+            </a>
         </div>
     </div>
     <div>

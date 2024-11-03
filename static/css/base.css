@@ -33,11 +33,16 @@ body {
 }
 
 
-.text-field-container {
+#text-field-container {
   border-radius: 20px;
   height: 40px;
   background-color: #bec3c9;
   color: #444950;
   text-align: center;
+}
+
+#add-blog-link {
+  text-decoration: none;
+  color: inherit;
 }
 

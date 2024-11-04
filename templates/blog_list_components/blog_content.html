@@ -37,7 +37,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-danger" onclick="deleteBlog({{ blog.pk }})">
+                        <button type="button" class="btn btn-danger" onclick="return deleteBlog({{ blog.pk }});">
                             Delete
                         </button>
                         <a href="{% url 'blog_delete' blog.pk %}" id="delete-blog-link-{{ blog.pk }}" aria-hidden="true"></a>

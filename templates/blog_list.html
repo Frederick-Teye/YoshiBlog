@@ -12,9 +12,7 @@
     <div>
         {% for blog in page_obj.object_list %}
         <div id="blog-{{ blog.pk }}">
-            <h2>{{ blog.title }}</h2>
-            <p>{{ blog.body }}</p>
-            <p>Created by {{ blog.author.get_full_name }}</p>
+            {% include 'blog_list_components/blog_content.html' %}
         </div>
         <hr><br>
         {% empty %}

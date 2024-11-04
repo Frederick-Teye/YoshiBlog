@@ -58,3 +58,10 @@ def blog_update_view(request, pk):
         form = BlogForm(instance=blog)
 
     return TemplateResponse(request, "blog_edit.html", {"form": form})
+
+
+@login_required
+def blog_delete_view(request, pk):
+    blog = get_object_or_404(Blog.objects.all(), pk=pk)
+    blog.delete
+    return redirect('blog_list')

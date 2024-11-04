@@ -5,18 +5,22 @@
     <div>
         <div id="text-field-container" aria-label="Click to add blog post">
             <a href="{% url 'blog_new' %}" aria-hidden="true" id="add-blog-link">
-                What's on your mind {{request.user.first_name}}?
+                What's on your mind {{ request.user.first_name }}?
             </a>
         </div>
     </div>
     <div>
         {% for blog in page_obj.object_list %}
-        <h2>{{ blog.title }}</h2>
-        <p>{{ blog.body }}</p>
-        <p>Created by {{ blog.author.get_full_name }}</p>
+        <div class="blog-{{ blog.pk }}">
+            <h2>{{ blog.title }}</h2>
+            <p>{{ blog.body }}</p>
+            <p>Created by {{ blog.author.get_full_name }}</p>
+        </div>
         <hr><br>
         {% empty %}
-        <p>Sorry, no blogs in this list.</p>
+        <div>
+            <p>Sorry, no blogs in this list.</p>
+        </div>
         {% endfor %}
     </div>
 {% endblock content %}

@@ -15,7 +15,8 @@
                     <a class="dropdown-item" href="{% url 'blog_edit' blog.pk %}">Edit blog</a>
                 </li>
                 <li>
-                    <button type="button" class="btn dropdown-item" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn dropdown-item" data-bs-toggle="modal" data-bs-target="#staticBackdrop{{ blog.pk }}">
                         Delete Blog
                     </button>
                 </li>
@@ -23,7 +24,7 @@
         </div>
 
         <!-- Modal -->
-        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        <div class="modal fade" id="staticBackdrop{{ blog.pk }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
             aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -36,7 +37,10 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-danger">Delete</button>
+                        <button type="button" class="btn btn-danger" onclick="deleteBlog({{ blog.pk }})">
+                            Delete
+                        </button>
+                        <a href="{% url 'blog_delete' blog.pk %}" id="delete-blog-link-{{ blog.pk }}" aria-hidden="true"></a>
                     </div>
                 </div>
             </div>

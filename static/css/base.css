@@ -36,7 +36,8 @@ body {
 #text-field-container {
   border-radius: 20px;
   height: 40px;
-  background-color: #bec3c9;
+  border-style: solid;
+  border-color: #bec3c9;
   color: #444950;
   text-align: center;
 }

@@ -2,23 +2,31 @@
 {% block title %} Blogs {% endblock title %}
 
 {% block content %}
-    <div>
-        <div id="text-field-container" aria-label="Click to add blog post">
-            <a href="{% url 'blog_new' %}" aria-hidden="true" id="add-blog-link">
-                What's on your mind {{ request.user.first_name }}?
-            </a>
+    <div class="row">
+        <div class="col-sm-3">
+            <!--Add tags here-->
+        </div>
+        <div class="col-sm-9">
+                <div>
+                    <div id="text-field-container" aria-label="Click to add blog post">
+                        <a href="{% url 'blog_new' %}" aria-hidden="true" id="add-blog-link">
+                            What's on your mind {{ request.user.first_name }}?
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    {% for blog in page_obj.object_list %}
+                    <div id="blog-{{ blog.pk }}">
+                        {% include 'blog_list_components/blog_content.html' %}
+                    </div>
+                    <hr><br>
+                    {% empty %}
+                    <div>
+                        <p>Sorry, no blogs in this list.</p>
+                    </div>
+                    {% endfor %}
+                </div>
         </div>
     </div>
-    <div>
-        {% for blog in page_obj.object_list %}
-        <div id="blog-{{ blog.pk }}">
-            {% include 'blog_list_components/blog_content.html' %}
-        </div>
-        <hr><br>
-        {% empty %}
-        <div>
-            <p>Sorry, no blogs in this list.</p>
-        </div>
-        {% endfor %}
-    </div>
+
 {% endblock content %}

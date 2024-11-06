@@ -7,7 +7,7 @@
             <!--Add tags here-->
             <span>Tags</span>
         </div>
-        <div class="col-sm-9">
+        <section class="col-sm-9">
                 <div class="row">
                     <div class="row flex-container">
                         <div class="col-1 col-sm-1">
@@ -24,9 +24,9 @@
                 </div>
                 <div>
                     {% for blog in page_obj.object_list %}
-                    <div id="blog-{{ blog.pk }}">
+                    <article id="blog-{{ blog.pk }}">
                         {% include 'blog_list_components/blog_content.html' %}
-                    </div>
+                    </article>
                     <hr><br>
                     {% empty %}
                     <div>
@@ -34,7 +34,7 @@
                     </div>
                     {% endfor %}
                 </div>
-        </div>
+        </section>
     </div>
 
 {% endblock content %}

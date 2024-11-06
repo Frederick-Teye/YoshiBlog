@@ -40,10 +40,15 @@ body {
   border-color: #bec3c9;
   border-width: 2px;
   color: #444950;
+  align-self: center;
 }
 
 #add-blog-link {
   text-decoration: none;
   color: inherit;
+}
+
+.flex-container {
+  display: flex;
 }
 

@@ -2,7 +2,7 @@
 {% block title %} Blogs {% endblock title %}
 
 {% block content %}
-    <div class="row">
+    <div class="row my-4">
         <div class="col-sm-3">
             <!--Add tags here-->
             <span>Tags</span>
@@ -10,12 +10,12 @@
         <div class="col-sm-9">
                 <div class="row">
                     <div class="row">
-                        <div class="col-4 col-sm-4">
+                        <div class="col-1 col-sm-1">
                             <div class="">
                                 <i class="bi bi-person-circle" style="font-size: 2rem; color: black;"></i>
                             </div>
                         </div>
-                        <div id="text-field-container" aria-label="Click to add blog post" class="ps-3 pt-1 col-8 col-sm-8">
+                        <div id="text-field-container" aria-label="Click to add blog post" class="ps-3 pt-1 col-11 col-sm-11">
                             <a href="{% url 'blog_new' %}" aria-hidden="true" id="add-blog-link">
                                 What's on your mind {{ request.user.first_name }}?
                             </a>

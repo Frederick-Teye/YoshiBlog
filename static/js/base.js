@@ -9,3 +9,18 @@ addBlogContainer.addEventListener('click', function() {
 function deleteBlog(id){
      document.getElementById('delete-blog-link-'+id).click();
 }
+
+
+window.addEventListener("resize", changeCommentFieldText);
+const commentFieldText = document.getElementsByClassName('comment-text-field');
+function changeCommentFieldText() {
+    if (screen.width <= 390){
+        for (let i = 0; i < commentFieldText.length; i++){
+            commentFieldText[i].innerText = "Comment here...";
+        }
+    } else {
+        for (let i = 0; i < commentFieldText.length; i++){
+            commentFieldText[i].innerText = "Write your comment here ...";
+        }
+    }
+}

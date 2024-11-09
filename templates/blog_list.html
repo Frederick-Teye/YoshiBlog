@@ -24,10 +24,9 @@
                 </div>
                 <div>
                     {% for blog in page_obj.object_list %}
-                    <article id="blog-{{ blog.pk }}">
+                    <article id="blog-{{ blog.pk }}" class="mb-4">
                         {% include 'blog_list_components/blog_content.html' %}
                     </article>
-                    <hr><br>
                     {% empty %}
                     <div>
                         <p>Sorry, no blogs in this list.</p>

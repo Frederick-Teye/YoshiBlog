@@ -122,7 +122,7 @@ body {
 }
 
 
-.item-a.like-btn:hover, .item-c:hover {
+.item-a.like-btn:hover, .item-c.share-btn:hover {
   background-color: #ebedf0;
   border-radius: 20px;
 }

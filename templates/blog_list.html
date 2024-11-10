@@ -9,13 +9,13 @@
         </div>
         <section class="col-sm-9">
                 <div class="row mb-4">
-                    <div class="row flex-container">
-                        <div class="col-1 col-sm-1">
+                    <div class="row flex-container" id="grid-container-2">
+                        <div class="col-1 col-sm-1 item-d">
                             <div class="">
                                 <i class="bi bi-person-circle" style="font-size: 2.5em; color: black;"></i>
                             </div>
                         </div>
-                        <div id="text-field-container" aria-label="Click to add blog post" class="ps-3 pt-1 col-11 col-sm-11 align-bottom">
+                        <div id="text-field-container" aria-label="Click to add blog post" class="ps-3 pt-1 col-11 col-sm-11 item-e">
                             <a href="{% url 'blog_new' %}" aria-hidden="true" id="add-blog-link">
                                 What's on your mind {{ request.user.first_name }}?
                             </a>

@@ -93,3 +93,30 @@ body {
     grid-column: 11/13;
   }
 }
+
+
+@media screen and (max-width: 890px) {
+  #grid-container-2 {
+    display: grid !important;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: auto;
+    align-items: center;
+    justify-items: stretch;
+    column-gap: 15px;
+  }
+
+  .item-d {
+    grid-column: 1/2;
+    justify-self: center;
+  }
+
+  .item-e {
+    grid-column: 2/13;
+    place-self: center stretch;
+  }
+}
+
+.item-e {
+  display: flex;
+  align-items: center;
+}

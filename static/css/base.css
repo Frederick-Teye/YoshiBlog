@@ -122,7 +122,12 @@ body {
 }
 
 
-.item-a.like-btn:hover, .item-c.share-btn:hover {
+.item-a.like-btn:hover, .item-c.share-btn:hover, .meat-balls-icon:hover {
   background-color: #ebedf0;
   border-radius: 20px;
+}
+
+.meat-balls-icon {
+  border-radius: 20px;
+  width: 10px;
 }

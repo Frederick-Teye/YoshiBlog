@@ -14,7 +14,7 @@
                     {% if blog.author.pk == request.user.pk %}
                     <div class="col-1">
                         <div class="btn-group dropstart">
-                            <button type="button" class="btn btn-link" data-bs-toggle="dropdown" aria-expanded="false"
+                            <button type="button" class="btn btn-link meat-balls-icon" data-bs-toggle="dropdown" aria-expanded="false"
                                 aria-label="Click to delete or edit blog">
                                 <i class="bi bi-three-dots" style="font-size: 1rem; color: black;"></i>
                             </button>
@@ -61,7 +61,12 @@
             </div>
             <h2 class="card-title h5">{{ blog.title }}</h2>
             
-            <p class="card-text">{{ blog.body|truncatewords:60 }}</p>
+            <p class="card-text">
+                {{ blog.body|truncatewords:60 }}
+                {% if blog.body|wordcount > 60 %}
+                    <a href="{% url 'blog_detail' blog.pk %}" class="text-decoration-none">more</a>
+                {% endif %}
+            </p>
 
             <div>
 

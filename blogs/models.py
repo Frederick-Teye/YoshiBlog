@@ -10,6 +10,12 @@ class Blog(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
     )
+    likes = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name="blog_likes",
+    )
 
     def __str__(self):
         return self.title
@@ -25,42 +31,12 @@ class Comment(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
     )
+    likes = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name="comment_likes",
+    )
 
     def __str__(self):
         return self.comment
-
-
-class CommentLike(models.Model):
-    author = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-    )
-    comment = models.ForeignKey(
-        Comment,
-        on_delete=models.CASCADE,
-        related_name="likes",
-    )
-
-    class Meta:
-        unique_together = (
-            "author",
-            "comment",
-        )  # Ensure a user can like a comment only once
-
-
-class BlogLike(models.Model):
-    author = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-    )
-    blog = models.ForeignKey(
-        Blog,
-        on_delete=models.CASCADE,
-        related_name="likes",
-    )
-
-    class Meta:
-        unique_together = (
-            "author",
-            "blog",
-        )  # Ensure a user can like a blog only once

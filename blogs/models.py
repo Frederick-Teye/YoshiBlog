@@ -13,7 +13,6 @@ class Blog(models.Model):
     likes = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         blank=True,
-        on_delete=models.CASCADE,
         related_name="blog_likes",
     )
 
@@ -34,7 +33,6 @@ class Comment(models.Model):
     likes = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         blank=True,
-        on_delete=models.CASCADE,
         related_name="comment_likes",
     )
 

@@ -12,6 +12,7 @@ from .models import Blog, Comment
 
 
 @login_required
+@ensure_csrf_cookie
 def blog_list_view(request):
     blogs = Blog.objects.all()
     paginator = Paginator(blogs, 5)  # Show 5 blogs per page.
@@ -22,6 +23,7 @@ def blog_list_view(request):
 
 
 @login_required
+@ensure_csrf_cookie
 def blog_detail_view(request, pk):
     blog = get_object_or_404(Blog.objects.all(), pk=pk)
     blog_instance = Blog.objects.get(pk=pk)

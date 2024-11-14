@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
 from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import ensure_csrf_cookie
 from .forms import CommentForm, BlogForm
 from .models import Blog, Comment
 
@@ -65,3 +66,8 @@ def blog_delete_view(request, pk):
     blog = get_object_or_404(Blog.objects.all(), pk=pk)
     blog.delete()
     return redirect("blog_list")
+
+
+@login_required
+def blog_like_view(request):
+    pass

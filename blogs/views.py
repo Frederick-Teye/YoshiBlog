@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
 from django.views.decorators.http import require_POST
 from .forms import CommentForm, BlogForm
-from .models import Blog, Comment, BlogLike
+from .models import Blog, Comment
 
 # Create your views here.
 

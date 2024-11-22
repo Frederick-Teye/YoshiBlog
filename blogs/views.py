@@ -35,6 +35,7 @@ def blog_detail_view(request, pk):
         comments = blog.comments.all().order_by("-created_at")
         is_ordered_by_likes = False
     total_comments = blog.comments.count()
+    total_likes = blog.likes.count()
     did_user_comment = blog.comments.filter(author=request.user).exists()
     form = CommentForm()
     context = {

@@ -27,6 +27,7 @@ def blog_list_view(request):
 def blog_detail_view(request, pk):
     blog = get_object_or_404(Blog.objects.all(), pk=pk)
     # blog_instance = Blog.objects.get(pk=pk)
+    sort_comments_by = request.COOKIES.get("sort_comment_by", "newest")
     comments = blog.comments.all()
     total_comments = blog.comments.count()
     did_user_comment = blog.comments.filter(author=request.user).exists()

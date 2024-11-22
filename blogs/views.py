@@ -29,12 +29,14 @@ def blog_detail_view(request, pk):
     # blog_instance = Blog.objects.get(pk=pk)
     comments = blog.comments.all()
     total_comments = blog.comments.count()
+    did_user_comment = blog.comments.filter(author=request.user).exists()
     form = CommentForm()
     context = {
         "blog": blog,
         "comments": comments,
         "form": form,
         "total_comments": total_comments,
+        "did_user_comment": did_user_comment,
     }
     template = "blog_detail.html"
     return TemplateResponse(request, template, context)

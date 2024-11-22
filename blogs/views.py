@@ -43,6 +43,7 @@ def blog_detail_view(request, pk):
         "form": form,
         "total_comments": total_comments,
         "did_user_comment": did_user_comment,
+        "is_ordered_by_likes": is_ordered_by_likes,
     }
     template = "blog_detail.html"
     return TemplateResponse(request, template, context)

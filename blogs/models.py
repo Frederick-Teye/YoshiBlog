@@ -36,5 +36,9 @@ class Comment(models.Model):
         related_name="comment_likes",
     )
 
+    @property
+    def total_likes(self):
+        return self.likes.count()
+
     def __str__(self):
         return self.comment

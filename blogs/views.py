@@ -30,10 +30,10 @@ def blog_detail_view(request, pk):
     sort_comments_by = request.COOKIES.get("sort_comment_by", "newest")
     if sort_comments_by == "top":
         comments = blog.comments.all().order_by("-likes")
-        is_order_by_likes = True
+        is_ordered_by_likes = True
     else:
         comments = blog.comments.all().order_by("-created_at")
-        is_order_by_likes = False
+        is_ordered_by_likes = False
     total_comments = blog.comments.count()
     did_user_comment = blog.comments.filter(author=request.user).exists()
     form = CommentForm()

@@ -14,7 +14,7 @@ from .models import Blog, Comment
 @login_required
 @ensure_csrf_cookie
 def blog_list_view(request):
-    blogs = Blog.objects.all()
+    blogs = Blog.objects.all().order_by("-date")
     paginator = Paginator(blogs, 5)  # Show 5 blogs per page.
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
@@ -26,10 +26,16 @@ def blog_list_view(request):
 @ensure_csrf_cookie
 def blog_detail_view(request, pk):
     blog = get_object_or_404(Blog.objects.all(), pk=pk)
-    blog_instance = Blog.objects.get(pk=pk)
-    comments = blog_instance.comments.all()
+    # blog_instance = Blog.objects.get(pk=pk)
+    comments = blog.comments.all()
+    total_comments = blog.comments.count()
     form = CommentForm()
-    context = {"blog": blog, "comments": comments, "form": form}
+    context = {
+        "blog": blog,
+        "comments": comments,
+        "form": form,
+        "total_comments": total_comments,
+    }
     template = "blog_detail.html"
     return TemplateResponse(request, template, context)
 
@@ -68,8 +74,3 @@ def blog_delete_view(request, pk):
     blog = get_object_or_404(Blog.objects.all(), pk=pk)
     blog.delete()
     return redirect("blog_list")
-
-
-@login_required
-def blog_like_view(request):
-    pass

@@ -86,3 +86,22 @@ def blog_delete_view(request, pk):
     blog = get_object_or_404(Blog.objects.all(), pk=pk)
     blog.delete()
     return redirect("blog_list")
+
+
+@login_required
+def blog_like_view(request, pk):
+    blog = get_object_or_404(Blog.objects.all(), pk=pk)
+    is_liked = False
+    if blog.blog_likes.filter(id=request.user.id).exists():
+        blog.blog_likes.remove(request.user)
+        is_liked = False
+    else:
+        blog.blog_likes.add(request.user)
+        is_liked = True
+    context = {
+        "blog": blog,
+        "is_liked": is_liked,
+        "total_likes": blog.blog_likes.count(),
+    }
+    template = "blog_detail_components/reaction_section.html"
+    return TemplateResponse(request, template, context)

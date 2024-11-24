@@ -6,6 +6,7 @@ from .views import (
     blog_detail_view,
     blog_list_view,
     blog_update_view,
+    blog_like_view,
 )
 
 urlpatterns = [

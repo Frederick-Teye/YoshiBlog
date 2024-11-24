@@ -43,6 +43,7 @@ def blog_detail_view(request, pk):
         "comments": comments,
         "form": form,
         "total_comments": total_comments,
+        "total_comments_minus_1": total_comments - 1,
         "total_likes": total_likes,
         "did_user_comment": did_user_comment,
         "is_ordered_by_likes": is_ordered_by_likes,

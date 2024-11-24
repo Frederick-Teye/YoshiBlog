@@ -4,6 +4,10 @@
 {% block title %} {{ blog.title }} {% endblock title %}
 
 {% block content %}
+    <!--Had to add it here because it wasn't working in the _base.html file-->
+    <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
     <div class="container mt-4" style="width: 80%;">
         <div class="row mb-4" id="grid-container">
             <div class="col-sm-1 item-a my-auto">

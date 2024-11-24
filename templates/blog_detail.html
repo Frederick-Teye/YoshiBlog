@@ -64,59 +64,7 @@
         <p> {{blog.body}} </p>
 
         <div class="blog_detail_reaction_section">
-            <div class="row d-flex justify-content-center" id="grid-container">
-                <hr>
-                <div class="col-xs-2 col-sm-2 item-a like-btn" id="blog-{{ blog.pk }}-like-section">
-                    <div>
-                        {% user_likes_blog blog.pk as user_likes %}
-                        {% if user_likes %}
-            
-                        <button type="button" class="btn btn-link text-decoration-none position-relative" style="color: black;">
-                            <a href="" class="text-decoration-none" style="color: rgb(62, 177, 244);">
-                                <i class="bi bi-hand-thumbs-up-fill me-2" style="font-size: 1.2em;"></i>
-                                <span class="icon-label"> Unlike</span>
-                            </a>
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                {{ total_likes }}
-                            </span>
-                        </button>
-                        {% else %}
-                        <button type="button" class="btn btn-link text-decoration-none position-relative" style="color: black;">
-                            <a href="" class="text-decoration-none" style="color: black;"></a>
-                            <i class="bi bi-hand-thumbs-up me-2" style="font-size: 1.2em;"></i>
-                            <span class="icon-label"> Like</span>
-                            </a>
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                {{ total_likes }}
-                                <span class="visually-hidden">unread messages</span>
-                            </span>
-                        </button>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="col-xs-6 col-sm-8 row d-flex justify-content-center item-b">
-                    <div class="col-sm-10 align-self-center">
-                        {% if did_user_comment %}
-                        {% if total_comments_minus_1 > 1 %}
-                        You and {{ total_comments_minus_1 }} others {{ total_comments_minus_1|pluralize}} comment
-                        {% endif %}
-                        {% else %}
-                        {% if total_comments > 0 %}
-                        {{ total_comments }} Others {{ total_comments|pluralize }} comment
-                        {% else %}
-                        There are no comments
-                        {% endif %}
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="col-xs-2 col-sm-2 item-c share-btn">
-                    <a href="" class="text-decoration-none" style="color: black;">
-                        <i class="bi bi-send me-2" style="font-size: 1.2em;"></i>
-                        <span class="icon-label"> Share</span>
-                    </a>
-                </div>
-                <hr>
-            </div>
+            {% include 'blog_detail_components/reaction_section.html' %}
         </div>
 
 

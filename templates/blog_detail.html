@@ -63,7 +63,7 @@
         <h1> {{blog.title}} </h1>
         <p> {{blog.body}} </p>
 
-        <div class="blog_detail_reaction_section">
+        <div id="blog_{{ blog.pk }}_detail_reaction_section">
             {% include 'blog_detail_components/reaction_section.html' %}
         </div>
 

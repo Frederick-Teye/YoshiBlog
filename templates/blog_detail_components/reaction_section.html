@@ -7,26 +7,29 @@
             {% user_likes_blog blog.pk as user_likes %}
             {% if user_likes %}
 
-            <button type="button" class="btn btn-link text-decoration-none position-relative" style="color: black;">
-                <a href="" class="text-decoration-none" style="color: rgb(62, 177, 244);">
-                    <i class="bi bi-hand-thumbs-up-fill me-2" style="font-size: 1.2em;"></i>
-                    <span class="icon-label"> Unlike</span>
-                </a>
+            <button type="button" id="like" class="btn btn-link text-decoration-none position-relative" style="color:  rgb(62, 177, 244);">
+
+                <i class="bi bi-hand-thumbs-up-fill me-2" style="font-size: 1.2em;"></i>
+                <span class="icon-label"> Unlike</span>
+                
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                     {{ total_likes }}
                 </span>
+
             </button>
+
             {% else %}
-            <button type="button" class="btn btn-link text-decoration-none position-relative" style="color: black;">
-                <a href="" class="text-decoration-none" style="color: black;"></a>
+
+            <button type="button" id="like" class="btn btn-link text-decoration-none position-relative" style="color: black;">
                 <i class="bi bi-hand-thumbs-up me-2" style="font-size: 1.2em;"></i>
                 <span class="icon-label"> Like</span>
-                </a>
+
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                     {{ total_likes }}
                     <span class="visually-hidden">unread messages</span>
                 </span>
             </button>
+
             {% endif %}
         </div>
     </div>

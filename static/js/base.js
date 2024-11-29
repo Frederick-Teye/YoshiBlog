@@ -1,3 +1,29 @@
+$(document).ready(function() {
+  $(document).on('click', '#detail-view-like', function() {
+    var pk = $(this).data('id');
+    var csrfToken = $(this).data('csrf-token');
+
+    $.ajax({
+      type: 'POST',
+      url: 'like/',
+      headers: {
+        'X-CSRFToken': csrfToken
+      },
+      data: {
+        "blog_id": pk,
+      },
+      success: function(data) {
+        var id = "#blog_" + pk + "_detail_reaction_section";
+        $(id).html(data)
+      },
+      error: function(rs, e) {
+        console.log(rs.responseText);
+      },
+    });
+  });
+});
+
+
 const addBlogContainer = document.getElementById("text-field-container");
 
 addBlogContainer.addEventListener('click', function() {
@@ -6,9 +32,9 @@ addBlogContainer.addEventListener('click', function() {
 
 
 // Delete blog in blog list view
-function deleteBlog(id){
-     document.getElementById('delete-blog-link-'+id).click();
-}
+// function deleteBlog(id){
+//      document.getElementById('delete-blog-link-'+id).click();
+// }
 
 
 window.addEventListener("resize", changeCommentFieldText);

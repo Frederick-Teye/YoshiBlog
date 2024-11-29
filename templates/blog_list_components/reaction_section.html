@@ -1,13 +1,46 @@
-<div>
-    {% if is_liked %}
-    <a href="" class="text-decoration-none" style="color: rgb(62, 177, 244);">
-        <i class="bi bi-hand-thumbs-up-fill me-2" style="font-size: 1.2em;"></i>
-        <span class="icon-label"> Unlike</span>
-    </a>
-    {% else %}
-    <a href="" class="text-decoration-none" style="color: black;"></a>
-        <i class="bi bi-hand-thumbs-up me-2" style="font-size: 1.2em;"></i>
-        <span class="icon-label"> Like</span>
-    </a>
-    {% endif %}
+{% load custom_tags %}
+
+<div class="row d-flex justify-content-center" id="grid-container">
+    <div class="col-xs-2 col-sm-2 item-a like-btn blog-like-section" data-id="{{ blog.pk }}" data-csrf-token="{{ csrf_token }}">
+        <div>
+            {% user_likes_blog blog.pk as user_likes %}
+            {% if user_likes %}
+        
+            <button type="button" class="btn btn-link text-decoration-none position-relative"
+                style="color:  rgb(62, 177, 244);">
+        
+                <i class="bi bi-hand-thumbs-up-fill me-2" style="font-size: 1.2em;"></i>
+                <span class="icon-label"> Unlike</span>
+        
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    {% total_blog_likes blog.pk %}
+                </span>
+        
+            </button>
+        
+            {% else %}
+        
+            <button type="button" class="btn btn-link text-decoration-none position-relative" style="color: black;">
+                <i class="bi bi-hand-thumbs-up me-2" style="font-size: 1.2em;"></i>
+                <span class="icon-label"> Like</span>
+        
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    {% total_blog_likes blog.pk %}
+                </span>
+            </button>
+        
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-xs-6 col-sm-8 row d-flex justify-content-center item-b">
+        <div class="col-sm-10 align-self-center comment-text-field" id="comment-text-field">
+            Write your comment here ...
+        </div>
+    </div>
+    <div class="col-xs-2 col-sm-2 item-c share-btn">
+        <a href="" class="text-decoration-none" style="color: black;">
+            <i class="bi bi-send me-2" style="font-size: 1.2em;"></i>
+            <span class="icon-label"> Share</span>
+        </a>
+    </div>
 </div>

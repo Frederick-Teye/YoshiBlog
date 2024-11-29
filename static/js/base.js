@@ -24,6 +24,39 @@ $(document).ready(function() {
 });
 
 
+$(document).ready(
+  alert("js file is working...")
+)
+
+
+// like functionality for list view
+$(document).ready(function() {
+  $(document).on('click', '.blog-like-section', function() {
+    var $this = $(this);
+    var pk = $this.data('id');
+    var csrfToken = $this.data('csrf-token');
+
+    $.ajax({
+      type: 'POST',
+      url: pk + '/list_like/',
+      headers: {
+        'X-CSRFToken': csrfToken
+      },
+      data: {
+        "blog_id": pk,
+      },
+      success: function(data) {
+        var id = "#blog_" + pk + "_list_item_reaction_section";
+        $(id).html(data)
+      },
+      error: function(rs, e) {
+        console.log(rs.responseText);
+      },
+    });
+  });
+});
+
+
 const addBlogContainer = document.getElementById("text-field-container");
 
 addBlogContainer.addEventListener('click', function() {

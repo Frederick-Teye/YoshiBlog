@@ -1,3 +1,4 @@
+{% load custom_tags %}
 <div class="row">
     <!--Card starts here-->
     <div class="card">
@@ -46,11 +47,8 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                        <button type="button" class="btn btn-danger" onclick="return deleteBlog({{ blog.pk }});">
-                                            Delete
-                                        </button>
-                                        <a href="{% url 'blog_delete' blog.pk %}" id="delete-blog-link-{{ blog.pk }}"
-                                            aria-hidden="true"></a>
+                                        <a class="btn btn-danger" href="{% url 'blog_delete' blog.pk %}" id="delete-blog-link-{{ blog.pk }}"
+                                            aria-hidden="true">Delete</a>
                                     </div>
                                 </div>
                             </div>
@@ -69,15 +67,25 @@
             </p>
 
             <div>
-
+                
             </div>
             <hr>
             <div class="row d-flex justify-content-center" id="grid-container">
-                <div class="col-xs-2 col-sm-2 item-a like-btn">
-                    <a href="" class="text-decoration-none" style="color: black;">
+                <div class="col-xs-2 col-sm-2 item-a like-btn" id="blog-{{ blog.pk }}-like-section">
+                    <div>
+                        {% user_likes_blog blog.pk as user_likes %}
+                        {% if user_likes %}
+                        <a href="" class="text-decoration-none" style="color: rgb(62, 177, 244);">
+                            <i class="bi bi-hand-thumbs-up-fill me-2" style="font-size: 1.2em;"></i>
+                            <span class="icon-label"> Unlike</span>
+                        </a>
+                        {% else %}
+                        <a href="" class="text-decoration-none" style="color: black;"></a>
                         <i class="bi bi-hand-thumbs-up me-2" style="font-size: 1.2em;"></i>
                         <span class="icon-label"> Like</span>
-                    </a>
+                        </a>
+                        {% endif %}
+                    </div>
                 </div>
                 <div class="col-xs-6 col-sm-8 row d-flex justify-content-center item-b">
                     <div class="col-sm-10 align-self-center comment-text-field" id="comment-text-field">

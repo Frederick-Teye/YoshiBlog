@@ -12,7 +12,6 @@ from .models import Blog, Comment
 
 
 @login_required
-@ensure_csrf_cookie
 def blog_list_view(request):
     blogs = Blog.objects.all().order_by("-date")
     paginator = Paginator(blogs, 5)  # Show 5 blogs per page.
@@ -23,7 +22,6 @@ def blog_list_view(request):
 
 
 @login_required
-@ensure_csrf_cookie
 def blog_detail_view(request, pk):
     blog = get_object_or_404(Blog.objects.all(), pk=pk)
     # blog_instance = Blog.objects.get(pk=pk)
@@ -90,18 +88,18 @@ def blog_delete_view(request, pk):
 
 @login_required
 def blog_like_view(request, pk):
-    blog = get_object_or_404(Blog.objects.all(), pk=pk)
+    blog = get_object_or_404(Blog.objects.all(), id=request.POST.get("blog_id"))
     is_liked = False
-    if blog.blog_likes.filter(id=request.user.id).exists():
-        blog.blog_likes.remove(request.user)
+    if blog.likes.filter(id=request.user.id).exists():
+        blog.likes.remove(request.user)
         is_liked = False
     else:
-        blog.blog_likes.add(request.user)
+        blog.likes.add(request.user)
         is_liked = True
     context = {
         "blog": blog,
         "is_liked": is_liked,
-        "total_likes": blog.blog_likes.count(),
+        "total_likes": blog.likes.count(),
     }
     template = "blog_detail_components/reaction_section.html"
     return TemplateResponse(request, template, context)

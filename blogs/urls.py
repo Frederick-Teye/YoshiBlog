@@ -14,6 +14,7 @@ urlpatterns = [
     path("<int:pk>/delete/", blog_delete_view, name="blog_delete"),
     path("<int:pk>/edit/", blog_update_view, name="blog_edit"),
     path("<int:pk>/like/", blog_like_view, name="blog_like"),
+    path('<int:pk>/list_like/', blog_like_view, name="list_blog_like"),
     path("new/", blog_create_view, name="blog_new"),
     path("", blog_list_view, name="blog_list"),
 ]

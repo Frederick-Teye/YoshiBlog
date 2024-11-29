@@ -24,11 +24,6 @@ $(document).ready(function() {
 });
 
 
-$(document).ready(
-  alert("js file is working...")
-)
-
-
 // like functionality for list view
 $(document).ready(function() {
   $(document).on('click', '.blog-like-section', function() {

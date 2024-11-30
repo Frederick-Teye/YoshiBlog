@@ -77,11 +77,13 @@
             <button class="btn btn-success ms-2" type="submit">Add Comment</button>
         </form>
 
-        {% for comment in comments %}
-        <p> {{ comment }} </p>
-        {% empty %}
-        <p>No comments entered yet!</p>
-        {% endfor %}
+        <div id="comment-section">
+            {% for comment in comments %}
+            <p> {{ comment }} </p>
+            {% empty %}
+            <p>No comments entered yet!</p>
+            {% endfor %}
+        </div>
         
         <hr>
     </div>

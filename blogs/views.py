@@ -88,7 +88,7 @@ def blog_delete_view(request, pk):
 
 @login_required
 def blog_like_view(request, pk):
-    if request.path == '/blogs/6/like/':
+    if request.path == "/blogs/6/like/":
         blog = get_object_or_404(Blog.objects.all(), id=request.POST.get("blog_id"))
         is_liked = False
         if blog.likes.filter(id=request.user.id).exists():
@@ -119,3 +119,11 @@ def blog_like_view(request, pk):
         }
         template = "blog_list_components/reaction_section.html"
     return TemplateResponse(request, template, context)
+
+
+def comment_delete(request, blog_pk, comment_pk):
+    pass
+
+
+def comment_edit(request, blog_pk, comment_pk):
+    pass

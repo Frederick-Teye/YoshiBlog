@@ -3,5 +3,5 @@ from .models import Blog, Comment
 
 # Register your models here.
 
-admin.register(Blog)
-admin.register(Comment)
+admin.site.register(Blog)
+admin.site.register(Comment)

@@ -79,7 +79,9 @@
 
         <div id="comment-section">
             {% for comment in comments %}
-            <p> {{ comment }} </p>
+
+            {% include 'blog_detail_components/comment.html' %}
+            
             {% empty %}
             <p>No comments entered yet!</p>
             {% endfor %}

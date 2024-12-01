@@ -72,7 +72,8 @@
         </div>
 
 
-        <form action="" method="post" id="comment-input-box">{% csrf_token %}
+        <form action="" method="post" id="comment-input-box" onsubmit="return submitCommentForm({{ blog.id }});">
+            {% csrf_token %}
             {{ form|crispy }}
             <button class="btn btn-success ms-2" type="submit">Add Comment</button>
         </form>

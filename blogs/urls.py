@@ -7,6 +7,7 @@ from .views import (
     blog_list_view,
     blog_update_view,
     blog_like_view,
+    comment_create_view,
     comment_delete,
     comment_edit,
 )

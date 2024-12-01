@@ -56,6 +56,7 @@ def blog_create_view(request):
         form = BlogForm(request.POST)
         if form.is_valid():
             form.instance.author = request.user
+            print(f"\n\n\nAuthor model: {form.instance.author}\n\n\n")
             blog_model_instance = form.save()
             return redirect("blog_detail", pk=blog_model_instance.pk)
     else:
@@ -127,3 +128,18 @@ def comment_delete(request, blog_pk, comment_pk):
 
 def comment_edit(request, blog_pk, comment_pk):
     pass
+
+
+@login_required
+def comment_create_view(request, blog_pk):
+    blog = get_object_or_404(Blog.objects.all(), pk=blog_pk)
+    form = CommentForm(request.POST)
+    if form.is_valid():
+        form.instance.author = request.user
+        form.instance.blog = blog
+        comment_model_instance = form.save()
+    return TemplateResponse(
+        request,
+        "comment.html",
+        {"new_comment": comment_model_instance},
+    )

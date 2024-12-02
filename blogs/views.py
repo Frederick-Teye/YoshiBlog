@@ -142,5 +142,5 @@ def comment_create_view(
     return TemplateResponse(
         request,
         "comment.html",
-        {"new_comment": comment_model_instance},
+        {"comment": comment_model_instance},
     )

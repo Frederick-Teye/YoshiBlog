@@ -56,7 +56,6 @@ def blog_create_view(request):
         form = BlogForm(request.POST)
         if form.is_valid():
             form.instance.author = request.user
-            print(f"\n\n\nAuthor model: {form.instance.author}\n\n\n")
             blog_model_instance = form.save()
             return redirect("blog_detail", pk=blog_model_instance.pk)
     else:

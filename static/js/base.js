@@ -81,7 +81,6 @@ function changeCommentFieldText() {
 
 
 function submitCommentForm(blog_pk){
-  alert("Blog Id: " + blog_pk);
   var form = $("#comment-input-box-" + blog_pk);
   $.ajax({
       type: 'POST',

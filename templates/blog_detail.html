@@ -78,7 +78,7 @@
             <button class="btn btn-success ms-2" type="submit">Add Comment</button>
         </form>
 
-        <div id="comment-section-{{ data.pk }}" data-has-comments="{% if comments|length > 0 %}false{% else %}true{% endif %}">
+        <div id="comment-section-{{ data.pk }}" data-has-comments="{% if comments|length > 0 %}true{% else %}false{% endif %}">
             {% for comment in comments %}
 
             {% include 'blog_detail_components/comment.html' %}

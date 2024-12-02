@@ -78,3 +78,30 @@ function changeCommentFieldText() {
         }
     }
 }
+
+
+function submitCommentForm(blog_pk){
+  alert("Blog Id: " + blog_pk);
+  var form = $("#comment-input-box-" + blog_pk);
+  $.ajax({
+      type: 'POST',
+      url: 'new_comment/',
+      data: form.serialize(),
+
+      success: function(data) {
+        var commentSection = $('#comment-section-' + blog_pk);
+        // Get the value of the data-has-comments attribute
+        var hasComments = commentSection.data('has-comments');
+
+        // Check if there are comments
+        if (hasComments === 'true') {
+            commentSection.prepend(data);
+        } else {
+            commentSection.html(data);
+        }
+      },
+      error: function(rs, e) {
+        console.log(rs.responseText);
+      },
+    });
+}

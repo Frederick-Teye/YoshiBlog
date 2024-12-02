@@ -131,8 +131,8 @@ def comment_edit(request, blog_pk, comment_pk):
 
 
 @login_required
-def comment_create_view(request, blog_pk):
-    blog = get_object_or_404(Blog.objects.all(), pk=blog_pk)
+def comment_create_view(request, pk):
+    blog = get_object_or_404(Blog.objects.all(), pk=pk)
     form = CommentForm(request.POST)
     if form.is_valid():
         form.instance.author = request.user

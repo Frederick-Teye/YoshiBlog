@@ -131,7 +131,9 @@ def comment_edit(request, blog_pk, comment_pk):
 
 
 @login_required
-def comment_create_view(request, pk):
+def comment_create_view(
+    request, pk
+):  # pk is the pk of the blog which comment belong to
     blog = get_object_or_404(Blog.objects.all(), pk=pk)
     form = CommentForm(request.POST)
     if form.is_valid():

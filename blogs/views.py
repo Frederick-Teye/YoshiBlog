@@ -141,6 +141,6 @@ def comment_create_view(
         comment_model_instance = form.save()
     return TemplateResponse(
         request,
-        "comment.html",
+        "blog_detail_components/comment.html",
         {"comment": comment_model_instance},
     )

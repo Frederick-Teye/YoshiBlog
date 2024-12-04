@@ -17,7 +17,7 @@
                     </button>
                     <ul class="dropdown-menu">
                         <li>
-                            <a class="dropdown-item" href="{% url 'comment_edit' blog.pk comment.pk %}">Edit Comment</a>
+                            <a class="dropdown-item" href="blogs/{{ blog.pk }}/{{ comment.pk }}/edit/">Edit Comment</a>
                         </li>
                         <li>
                             <!-- Button trigger modal -->
@@ -46,7 +46,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <a class="btn btn-danger" href="{% url 'blog_delete' blog.pk %}"
+                                <a class="btn btn-danger" href="blogs/{{ blog.pk }}/{{ comment.pk }}/delete/"
                                     id="delete-blog-link-{{ comment.pk }}" aria-hidden="true">Delete</a>
                             </div>
                         </div>

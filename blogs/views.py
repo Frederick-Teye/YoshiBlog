@@ -142,8 +142,7 @@ def comment_create_view(
         form.instance.author = request.user
         form.instance.blog = blog
         comment_model_instance = form.save()
-        print("\n\n\nIt Got here!\n\n\n")
-        return render(
+        return TemplateResponse(
             request,
             "blog_detail_components/comment.html",
             {"comment": comment_model_instance},

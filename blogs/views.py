@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.template.response import TemplateResponse
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -121,11 +121,11 @@ def blog_like_view(request, pk):
     return TemplateResponse(request, template, context)
 
 
-def comment_delete(request, blog_pk, comment_pk):
+def comment_delete_view(request, pk, comment_pk):
     pass
 
 
-def comment_edit(request, blog_pk, comment_pk):
+def comment_edit_view(request, pk, comment_pk):
     pass
 
 
@@ -139,8 +139,9 @@ def comment_create_view(
         form.instance.author = request.user
         form.instance.blog = blog
         comment_model_instance = form.save()
-    return TemplateResponse(
-        request,
-        "blog_detail_components/comment.html",
-        {"comment": comment_model_instance},
-    )
+        print("\n\n\nIt Got here!\n\n\n")
+        return render(
+            request,
+            "blog_detail_components/comment.html",
+            {"comment": comment_model_instance},
+        )

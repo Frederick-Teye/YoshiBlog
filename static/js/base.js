@@ -93,9 +93,10 @@ function submitCommentForm(blog_pk){
         var hasComments = commentSection.data('has-comments');
 
         // Check if there are comments
-        if (hasComments === 'true') {
+        if (hasComments === true) {
             commentSection.prepend(data);
         } else {
+            hasComments = true;
             commentSection.html(data);
         }
       },

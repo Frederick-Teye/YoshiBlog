@@ -129,7 +129,18 @@ def comment_delete_view(request, pk, comment_pk):
 
 
 def comment_edit_view(request, pk, comment_pk):
-    pass
+    blog = get_object_or_404(Blog.objects.all(), pk=pk)
+    comment = get_object_or_404(Comment.objects.all(), blog=blog, pk=comment_pk)
+    if request.method == "POST":
+        form = CommentForm(request.POST, instance=comment)
+        if form.is_valid():
+            form.instance.author = request.user
+            form.save()
+            return redirect("blog_detail", pk=blog.pk)
+    else:
+        form = CommentForm(instance=comment)
+
+    return TemplateResponse(request, "comment_edit.html", {"form": form})
 
 
 @login_required

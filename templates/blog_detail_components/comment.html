@@ -17,7 +17,10 @@
                     </button>
                     <ul class="dropdown-menu">
                         <li>
-                            <a class="dropdown-item" href="blogs/{{ blog.pk }}/{{ comment.pk }}/edit/">Edit Comment</a>
+                            <!-- Button trigger edit comment modal -->
+                            <button type="button" class="btn dropdown-item" data-bs-toggle="modal" data-bs-target="#editComment" data-href="{{ comment.pk }}/edit/">
+                                Edit Comment
+                            </button>
                         </li>
                         <li>
                             <!-- Button trigger modal -->

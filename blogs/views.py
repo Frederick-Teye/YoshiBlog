@@ -140,7 +140,9 @@ def comment_update_view(request, pk, comment_pk):
     else:
         form = CommentForm(instance=comment)
 
-    return TemplateResponse(request, "comment_edit.html", {"form": form})
+    return TemplateResponse(
+        request, "blog_detail_components/comment_edit_form.html", {"form": form}
+    )
 
 
 @login_required

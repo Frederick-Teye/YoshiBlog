@@ -106,31 +106,3 @@ function submitCommentForm(blog_pk){
     });
 }
 
-
-const editCommentModal = document.getElementById('editCommentModal');
-
-alert("It got here...");
-
-if (editCommentModal) {
-  editCommentModal.addEventListener('show.bs.modal', event => {
-    const button = event.relatedTarget
-    const hrefAttributeValue = button.getAttribute('data-bs-href')
-
-    alert(hrefAttributeValue);
-
-    fetch(hrefAttributeValue)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok ' + response.statusText);
-        }
-        return response.text();
-      })
-      .then(data => {
-        document.getElementById("commentModelBody").innerHTML = data;
-      })
-      .catch(error => {
-        console.log('Error:', error);
-      });
-
-  })
-}

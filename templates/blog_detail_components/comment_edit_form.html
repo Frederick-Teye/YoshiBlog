@@ -1,6 +1,6 @@
 {% load crispy_forms_tags %}
 
-<form action="" method="post">{% csrf_token %}
+<form action="{{form.instance.pk}}/edit/" method="post">{% csrf_token %}
     {{ form|crispy }}
     <button class="btn btn-success ms-2" type="submit">Update</button>
 </form>

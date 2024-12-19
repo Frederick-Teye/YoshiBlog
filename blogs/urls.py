@@ -17,7 +17,7 @@ from .views import (
 comment_patterns = [
     path("<int:comment_pk>/delete/", comment_delete_view, name="comment_delete"),
     path("<int:comment_pk>/edit/", comment_update_view, name="comment_edit"),
-    path("<int:comment_pk>/like/", comment_like_view, name="comment_like"),
+    path("<int:comment_pk>/comment_like/", comment_like_view, name="comment_like"),
     path("new_comment/", comment_create_view, name="comment_new"),
 ]
 

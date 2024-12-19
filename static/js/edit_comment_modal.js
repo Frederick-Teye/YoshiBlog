@@ -22,3 +22,28 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+function submitLike(commentLikeButtonObject) {
+    const likeButton = commentLikeButtonObject;
+    const commentId = likeButton.getAttribute('data-id');
+    const csrftoken = likeButton.getAttribute('data-csrf-token');
+    const url = commentId + "/comment_like/";
+
+    fetch(url, {
+        method: "POST",
+        headers: {'X-CSRFToken': csrftoken}
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not okay ' + response.statusText);
+        }
+        return response.text();
+    })
+    .then(data => {
+        document.getElementById("comment-reaction-" + commentId).innerHTML = data;
+    })
+    .catch(error => {
+        console.log("Error: " + error);
+    });
+
+}

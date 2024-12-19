@@ -1,0 +1,58 @@
+{% load custom_tags %}
+
+<div class="row d-flex" id="grid-container">
+    <!-- <hr> -->
+    <div class="col-xs-2 col-sm-2 item-a like-btn" id="detail-view-like" data-id="{{ blog.id }}"
+        data-csrf-token="{{ csrf_token }}">
+        <div>
+            {% user_likes_comment comment.pk as user_likes_comment %}
+
+            {% if user_likes_comment %}
+
+            <div style="color:  rgb(62, 177, 244);">
+                <i class="bi bi-hand-thumbs-up-fill me-2" style="font-size: 1.2em;"></i>
+              
+                <span>
+                    {% total_comment_likes comment.pk %}
+                </span>
+            </div>
+
+            {% else %}
+
+            <div style="color: black;">
+                <i class="bi bi-hand-thumbs-up me-2" style="font-size: 1.2em;"></i>               
+                <span>
+                    {% total_comment_likes comment.pk as total_comment_likes_var %}
+
+                    {% if total_comment_likes_var  > 0 %}
+                    {% total_comment_likes comment.pk %}
+                    {% endif %}
+                </span>
+            </div>
+
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-xs-6 col-sm-8 row d-flex justify-content-center item-b">
+        <div class="col-sm-10 align-self-center">
+            <!-- {% if did_user_comment %}
+            {% if total_comments_minus_1 > 1 %}
+            You and {{ total_comments_minus_1 }} others {{ total_comments_minus_1|pluralize}} comment
+            {% endif %}
+            {% else %}
+            {% if total_comments > 0 %}
+            {{ total_comments }} Others {{ total_comments|pluralize }} comment
+            {% else %}
+            There are no comments
+            {% endif %}
+            {% endif %} -->
+        </div>
+    </div>
+    <!-- <div class="col-xs-2 col-sm-2 item-c share-btn">
+        <a href="" class="text-decoration-none" style="color: black;">
+            <i class="bi bi-send me-2" style="font-size: 1.2em;"></i>
+            <span class="icon-label"> Share</span>
+        </a>
+    </div>
+    <hr> -->
+</div>

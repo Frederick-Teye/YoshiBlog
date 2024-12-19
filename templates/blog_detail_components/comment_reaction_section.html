@@ -2,12 +2,12 @@
 
 <div class="row d-flex" id="grid-container">
     <!-- <hr> -->
-    <div class="col-xs-2 col-sm-2 item-a like-btn" id="detail-view-like" data-id="{{ comment.id }}"
+    <div class="col-xs-2 col-sm-2 item-a like-btn" data-id="{{ comment.id }}"
         data-csrf-token="{{ csrf_token }}" onclick="submitLike(this)">
         <div>
-            {% user_likes_comment comment.pk as user_likes_comment %}
+            {% user_likes_comment comment.pk as user_liked_comment %}
 
-            {% if user_likes_comment %}
+            {% if user_liked_comment %}
 
             <div style="color:  rgb(62, 177, 244);">
                 <i class="bi bi-hand-thumbs-up-fill me-2" style="font-size: 1.2em;"></i>

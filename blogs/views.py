@@ -168,15 +168,10 @@ def comment_create_view(
 def comment_like_view(request, pk, comment_pk):
     blog = get_object_or_404(Blog.objects.all(), pk=pk)
     comment = get_object_or_404(Comment.objects.all(), blog=blog, pk=comment_pk)
-    is_liked = False
     if comment.likes.filter(id=request.user.id).exists():
         comment.likes.remove(request.user)
-        is_liked = False
     else:
         comment.likes.add(request.user)
-        is_liked = True
     return TemplateResponse(
-        request,
-        "blog_detail_components/comment_reaction_section.html",
-        {"is_liked": is_liked, "total_likes": comment.likes.count()},
-    )
+        request, "blog_detail_components/comment_reaction_section.html", {}
+    )  # returns empty context because custom tags handles all of the context needed

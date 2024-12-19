@@ -2,7 +2,7 @@
 
 <div class="row d-flex" id="grid-container">
     <!-- <hr> -->
-    <div class="col-xs-2 col-sm-2 item-a like-btn" id="detail-view-like" data-id="{{ blog.id }}"
+    <div class="col-xs-2 col-sm-2 item-a like-btn" id="detail-view-like" data-id="{{ comment.id }}"
         data-csrf-token="{{ csrf_token }}">
         <div>
             {% user_likes_comment comment.pk as user_likes_comment %}

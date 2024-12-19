@@ -2,7 +2,7 @@
 
 <div class="row d-flex justify-content-center" id="grid-container">
     <hr>
-    <div class="col-xs-2 col-sm-2 item-a like-btn" id="detail-view-like" data-id="{{ blog.id }}" data-csrf-token="{{ csrf_token }}">
+    <div class="col-xs-2 col-sm-2 item-a like-btn" id="detail-view-like" data-id="{{ blog.id }}" data-csrf-token="{{ csrf_token }}" data-href="{% url 'blog_like' blog.id %}">
         <div>
             {% user_likes_blog blog.pk as user_likes %}
             {% if user_likes %}

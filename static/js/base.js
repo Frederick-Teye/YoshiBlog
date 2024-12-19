@@ -5,7 +5,7 @@ $(document).ready(function() {
 
     $.ajax({
       type: 'POST',
-      url: 'like/',
+      url: $(this).data('href'),
       headers: {
         'X-CSRFToken': csrfToken
       },
@@ -14,7 +14,7 @@ $(document).ready(function() {
       },
       success: function(data) {
         var id = "#blog_" + pk + "_detail_reaction_section";
-        $(id).html(data)
+        $(id).html(data);
       },
       error: function(rs, e) {
         console.log(rs.responseText);

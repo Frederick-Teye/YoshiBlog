@@ -172,6 +172,8 @@ def comment_like_view(request, pk, comment_pk):
         comment.likes.remove(request.user)
     else:
         comment.likes.add(request.user)
-    return TemplateResponse(
-        request, "blog_detail_components/comment_reaction_section.html", {}
-    )  # returns empty context because custom tags handles all of the context needed
+    return render(
+        request,
+        "blog_detail_components/comment_reaction_section.html",
+        {"comment": comment},
+    )

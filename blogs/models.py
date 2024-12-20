@@ -24,7 +24,7 @@ class Comment(models.Model):
     blog = models.ForeignKey(
         Blog, on_delete=models.CASCADE, related_name="comments"
     )  # added related_name argument
-    comment = models.CharField(max_length=140)
+    comment = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,

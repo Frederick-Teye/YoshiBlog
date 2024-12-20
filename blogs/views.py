@@ -88,7 +88,7 @@ def blog_delete_view(request, pk):
 
 @login_required
 def blog_like_view(request, pk):
-    if request.path_info == "/blogs/6/like/":
+    if request.path_info == "/blogs/" + str(pk) + "/like/":
         blog = get_object_or_404(Blog.objects.all(), id=request.POST.get("blog_id"))
         is_liked = False
         if blog.likes.filter(id=request.user.id).exists():

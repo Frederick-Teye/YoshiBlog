@@ -168,7 +168,9 @@ def comment_create_view(
 def comment_like_view(request, pk, comment_pk):
     blog = get_object_or_404(Blog.objects.all(), pk=pk)
     comment = get_object_or_404(Comment.objects.all(), blog=blog, pk=comment_pk)
-    if comment.likes.filter(id=request.user.id).exists():
+    if (
+        request.user in comment.likes.all()
+    ):  # new style I learnt to filter which easy to understand by just looking
         comment.likes.remove(request.user)
     else:
         comment.likes.add(request.user)

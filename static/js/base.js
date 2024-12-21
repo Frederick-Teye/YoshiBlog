@@ -81,18 +81,19 @@ function changeCommentFieldText() {
 
 
 function submitCommentForm(formObject){
-  var form = $("#comment-input-box-" + blog_pk);
-  alert(form.serialize());
+  const form = $(formObject);
+  let urlRoute = $(formObject).data("href");
+  let blog_pk = $(formObject).data("id");
+
   $.ajax({
       type: 'POST',
-      url: 'new_comment/',
-      data: form.serialize(),
+      url: urlRoute,
+      data: $(form).serialize(),
 
       success: function(data) {
         var commentSection = $('#comment-section-' + blog_pk);
         // Get the value of the data-has-comments attribute
         var hasComments = commentSection.data('has-comments');
-
         // Check if there are comments
         if (hasComments === true) {
             commentSection.prepend(data);

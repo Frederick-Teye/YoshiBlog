@@ -92,7 +92,7 @@
         </div>
 
 
-        <form action="" method="post" id="comment-input-box-{{ blog.id }}" onsubmit="submitCommentForm({{ blog.id }});">
+        <form action="" method="post" id="comment-input-box-{{ blog.id }}" onsubmit="submitCommentForm(this);">
             {% csrf_token %}
             {{ form|crispy }}
             <button class="btn btn-success ms-2" type="submit">Add Comment</button>

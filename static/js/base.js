@@ -80,8 +80,9 @@ function changeCommentFieldText() {
 }
 
 
-function submitCommentForm(blog_pk){
+function submitCommentForm(formObject){
   var form = $("#comment-input-box-" + blog_pk);
+  alert(form.serialize());
   $.ajax({
       type: 'POST',
       url: 'new_comment/',

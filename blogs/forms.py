@@ -9,7 +9,7 @@ class CommentForm(ModelForm):
         fields = ("comment",)
 
 
-class BlogForm(forms.ModelForm):
+class BlogForm(ModelForm):
     class Meta:
         model = Blog
         fields = (

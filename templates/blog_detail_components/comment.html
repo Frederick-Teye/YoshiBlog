@@ -58,7 +58,7 @@
             {% endif %}
         </div>
     </div>
-    <p> {{ comment.comment }} </p>
+    <p> {{ comment.comment | markdown | safe }} </p>
 
     <div id="comment-reaction-{{ comment.id }}">
         {% include 'blog_detail_components/comment_reaction_section.html' %}

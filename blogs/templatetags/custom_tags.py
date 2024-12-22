@@ -1,5 +1,6 @@
 from django import template
 from django.shortcuts import get_object_or_404
+from django.template.defaultfilters import stringfilter
 from blogs.models import Blog, Comment
 
 register = template.Library()

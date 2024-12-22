@@ -131,3 +131,8 @@ body {
   border-radius: 20px;
   width: 10px;
 }
+
+textarea.no-scrollbars {
+  overflow: hidden;
+  outline: none;
+}

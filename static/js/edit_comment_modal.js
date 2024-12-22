@@ -47,3 +47,10 @@ function submitLike(commentLikeButtonObject) {
     });
 
 }
+
+$(document).ready(function() {
+    $('.no-scrollbars').on('keyup keypress', function() {
+        $(this).height(0);
+        $(this).height(this.scrollHeight);
+    });
+});

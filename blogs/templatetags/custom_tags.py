@@ -2,6 +2,7 @@ from django import template
 from django.shortcuts import get_object_or_404
 from django.template.defaultfilters import stringfilter
 from blogs.models import Blog, Comment
+import markdown as md
 
 register = template.Library()
 

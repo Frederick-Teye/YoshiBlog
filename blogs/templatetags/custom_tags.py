@@ -37,3 +37,10 @@ def total_comment_likes(pk):
 def total_comments(pk):
     blog_instance = Blog.objects.get(pk=pk)
     return blog_instance.comments.count()
+
+
+# markdown
+@register.filter()
+@stringfilter
+def markdown(value):
+    return md.markdown(value, extensions=["markdown.extensions.fenced_code"])

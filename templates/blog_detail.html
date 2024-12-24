@@ -85,7 +85,7 @@
             </div>
         </div>
         <h1> {{blog.title}} </h1>
-        <p> {{blog.body}} </p>
+        <p> {{ blog.body | markdown | safe }} </p>
 
         <div id="blog_{{ blog.pk }}_detail_reaction_section">
             {% include 'blog_detail_components/reaction_section.html' %}

@@ -44,6 +44,13 @@ def total_backticks(value: str):
     return value.count("```")
 
 
+@register.simple_tag()
+def close_code(value: str):
+    if not isinstance(value, str):
+        return value
+    return value + "```"
+
+
 # markdown
 @register.filter()
 @stringfilter

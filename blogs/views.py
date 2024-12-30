@@ -14,7 +14,7 @@ from .models import Blog, Comment
 @login_required
 def blog_list_view(request):
     blogs = Blog.objects.all().order_by("-date")
-    paginator = Paginator(blogs, 5)  # Show 5 blogs per page.
+    paginator = Paginator(blogs, 3)  # Show 3 blogs per page.
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
     template = "blog_list.html"

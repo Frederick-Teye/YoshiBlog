@@ -15,6 +15,7 @@ class Blog(models.Model):
         blank=True,
         related_name="blog_likes",
     )
+    slug = models.SlugField(blank=True, null=True)
 
     def __str__(self):
         return self.title

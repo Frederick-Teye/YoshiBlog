@@ -23,7 +23,7 @@ comment_patterns = [
 
 
 urlpatterns = [
-    path("<int:pk>/", blog_detail_view, name="blog_detail"),
+    path("<int:pk>/<slug:post_slug>/", blog_detail_view, name="blog_detail"),
     path("<int:pk>/", include(comment_patterns)),
     path("<int:pk>/delete/", blog_delete_view, name="blog_delete"),
     path("<int:pk>/edit/", blog_update_view, name="blog_edit"),

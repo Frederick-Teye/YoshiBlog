@@ -18,6 +18,16 @@ class Blog(models.Model):
     )
     slug = models.SlugField(blank=True, null=True)
 
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        original_slug = self.slug
+        counter = 1
+        while Blog.objects.filter(slug=self.slug).exists():
+            self.slug = f"{original_slug}-{counter}"
+            counter += 1
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.title
 

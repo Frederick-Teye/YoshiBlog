@@ -22,7 +22,7 @@ def blog_list_view(request):
 
 
 @login_required
-def blog_detail_view(request, pk):
+def blog_detail_view(request, pk, blog_slug):
     blog = get_object_or_404(Blog.objects.all(), pk=pk)
     # blog_instance = Blog.objects.get(pk=pk)
     sort_comments_by = request.COOKIES.get("sort_comment_by", "newest")

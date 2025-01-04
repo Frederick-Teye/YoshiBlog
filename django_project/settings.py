@@ -1,5 +1,6 @@
 import os
 from decouple import config
+import logging.config
 from pathlib import Path
 
 # To determine if the code is on Heroku server

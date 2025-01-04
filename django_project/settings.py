@@ -287,3 +287,49 @@ ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
+
+
+# LOG CONFIGURATION
+
+# Disable Django's logging setup
+LOGGING_CONFIG = None
+
+LOGLEVEL = os.environ.get("LOGLEVEL", "INFO")
+
+logging.config.dictConfig(
+    {
+        "version": 1,
+        "disable_existing_loggers": False,
+        "formatters": {
+            "default": {
+                # exact format is not important, this is the minimum information
+                "format": "%(asctime)s %(name)-12s %(levelname)-8s %(message)s",
+            },
+            "django.server": DEFAULT_LOGGING["formatters"]["django.server"],
+        },
+        "handlers": {
+            # console logs to stderr
+            "console": {
+                "class": "logging.StreamHandler",
+                "formatter": "default",
+            },
+            "django.server": DEFAULT_LOGGING["handlers"]["django.server"],
+        },
+        "loggers": {
+            # default for all undefined Python modules
+            "": {
+                "level": "WARNING",
+                "handlers": ["console"],
+            },
+            # Our application code
+            "app": {
+                "level": LOGLEVEL,
+                "handlers": ["console"],
+                # Avoid double logging because of root logger
+                "propagate": False,
+            },
+            # Default runserver request logging
+            "django.server": DEFAULT_LOGGING["loggers"]["django.server"],
+        },
+    }
+)

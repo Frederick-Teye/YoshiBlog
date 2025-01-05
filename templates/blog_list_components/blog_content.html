@@ -59,12 +59,25 @@
             </div>
             <h2 class="card-title h5">{{ blog.title }}</h2>
             
-            <p class="card-text">
-                {{ blog.body|truncatewords:60 }}
+            <div class="card-text">
+                {% with blog.body|truncatewords:60 as blog_body %}
+
+                {% if "```" in blog_body%}
+                    {% total_backticks blog_body as blog_body_total_backticks %} 
+                    {% if blog_body_total_backticks|divisibleby:"2" is not True %}
+                        {% close_code blog_body as blog_body_code_closed %}
+                        {{ blog_body_code_closed | markdown | safe }}
+                    {% else %}
+                        {{ blog_body | markdown | safe }}
+                    {% endif %}
+                {% else %}
+                    {{ blog_body }}
+                {%endif%}
+                {% endwith %}
                 {% if blog.body|wordcount > 60 %}
-                    <a href="{% url 'blog_detail' blog.pk %}" class="text-decoration-none">more</a>
+                <a href="{% url 'blog_detail' blog.pk %}" class="text-decoration-none">more</a>
                 {% endif %}
-            </p>
+            </div>
 
             <div>
                 

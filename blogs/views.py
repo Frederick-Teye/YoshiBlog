@@ -25,6 +25,15 @@ def blog_list_view(request):
 @login_required
 def blog_detail_view(request, pk, blog_slug):
     blog = get_object_or_404(Blog.objects.all(), pk=pk)
+    if blog_slug != blog.slug:
+        referrer = request.META.get("HTTP_REFERRER", "No referrer")
+        logger.error(
+            "A bad slug was encountered: '%s'. The expected slug was '%s'. "
+            + "The referring location was %s.",
+            blog_slug,
+            blog.slug,
+            referrer,
+        )
     sort_comments_by = request.COOKIES.get("sort_comment_by", "newest")
     if sort_comments_by == "top":
         comments = blog.comments.all().order_by("-likes")

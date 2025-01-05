@@ -132,8 +132,9 @@ def comment_delete_view(request, pk, blog_slug, comment_pk):
 
 
 @login_required
-def comment_update_view(request, pk, comment_pk):
+def comment_update_view(request, pk, blog_slug, comment_pk):
     blog = get_object_or_404(Blog.objects.all(), pk=pk)
+    check_and_log_wrong_slug(request, blog, blog_slug)
     comment = get_object_or_404(Comment.objects.all(), blog=blog, pk=comment_pk)
     if request.method == "POST":
         form = CommentForm(request.POST, instance=comment)

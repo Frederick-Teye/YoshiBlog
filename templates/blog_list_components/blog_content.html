@@ -75,7 +75,7 @@
                 {%endif%}
                 {% endwith %}
                 {% if blog.body|wordcount > 60 %}
-                <a href="{% url 'blog_detail' blog.pk %}" class="text-decoration-none">more</a>
+                <a href="{% url 'blog_detail' blog.pk blog.slug %}" class="text-decoration-none">more</a>
                 {% endif %}
             </div>
 

@@ -188,3 +188,15 @@ def comment_like_view(request, pk, comment_pk):
         "blog_detail_components/comment_reaction_section.html",
         {"comment": comment},
     )
+
+
+def check_and_log_wrong_slug(request, blog, blog_slug):
+    if blog_slug != blog.slug:
+        referrer = request.META.get("HTTP_REFERRER", "No referrer")
+        logger.error(
+            "A bad slug was encountered: '%s'. The expected slug was '%s'. "
+            + "The referring location was %s.",
+            blog_slug,
+            blog.slug,
+            referrer,
+        )

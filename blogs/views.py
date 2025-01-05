@@ -152,9 +152,10 @@ def comment_update_view(request, pk, blog_slug, comment_pk):
 
 @login_required
 def comment_create_view(
-    request, pk
+    request, pk, blog_slug
 ):  # pk is the pk of the blog which comment belong to
     blog = get_object_or_404(Blog.objects.all(), pk=pk)
+    check_and_log_wrong_slug(request, blog, blog_slug)
     form = CommentForm(request.POST)
     if form.is_valid():
         form.instance.author = request.user

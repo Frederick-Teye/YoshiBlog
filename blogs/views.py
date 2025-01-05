@@ -9,6 +9,8 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from .forms import CommentForm, BlogForm
 from .models import Blog, Comment
 
+logger = logging.getLogger(__name__)
+
 
 @login_required
 def blog_list_view(request):

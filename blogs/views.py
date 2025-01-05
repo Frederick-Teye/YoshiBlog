@@ -8,8 +8,6 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from .forms import CommentForm, BlogForm
 from .models import Blog, Comment
 
-# Create your views here.
-
 
 @login_required
 def blog_list_view(request):
@@ -24,7 +22,6 @@ def blog_list_view(request):
 @login_required
 def blog_detail_view(request, pk, blog_slug):
     blog = get_object_or_404(Blog.objects.all(), pk=pk)
-    # blog_instance = Blog.objects.get(pk=pk)
     sort_comments_by = request.COOKIES.get("sort_comment_by", "newest")
     if sort_comments_by == "top":
         comments = blog.comments.all().order_by("-likes")

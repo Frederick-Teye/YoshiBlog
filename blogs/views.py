@@ -169,8 +169,9 @@ def comment_create_view(
 
 
 @login_required
-def comment_like_view(request, pk, comment_pk):
+def comment_like_view(request, pk, blog_slug, comment_pk):
     blog = get_object_or_404(Blog.objects.all(), pk=pk)
+    check_and_log_wrong_slug(request, blog, blog_slug)
     comment = get_object_or_404(Comment.objects.all(), blog=blog, pk=comment_pk)
     if (
         request.user in comment.likes.all()

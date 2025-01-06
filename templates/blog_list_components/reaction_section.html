@@ -1,7 +1,7 @@
 {% load custom_tags %}
 
 <div class="row d-flex justify-content-center" id="grid-container">
-    <div class="col-xs-2 col-sm-2 item-a like-btn blog-like-section" data-id="{{ blog.pk }}" data-csrf-token="{{ csrf_token }}">
+    <div class="col-xs-2 col-sm-2 item-a like-btn blog-like-section" data-id="{{ blog.pk }}" data-csrf-token="{{ csrf_token }}" data-href="{% url 'list_blog_like' blog.pk %}">
         <div>
             {% user_likes_blog blog.pk as user_likes %}
             {% if user_likes %}

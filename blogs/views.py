@@ -128,7 +128,7 @@ def comment_delete_view(request, pk, blog_slug, comment_pk):
     check_and_log_wrong_slug(request, blog, blog_slug)
     comment = get_object_or_404(Comment.objects.all(), blog=blog, pk=comment_pk)
     comment.delete()
-    return redirect("blog_detail", pk=pk)
+    return redirect("blog_detail", pk=pk, blog_slug=blog_slug)
 
 
 @login_required

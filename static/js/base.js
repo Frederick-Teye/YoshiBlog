@@ -30,10 +30,11 @@ $(document).ready(function() {
     var $this = $(this);
     var pk = $this.data('id');
     var csrfToken = $this.data('csrf-token');
+    let urlRoute = $this.data('href');
 
     $.ajax({
       type: 'POST',
-      url: pk + '/list_like/',
+      url: urlRoute,
       headers: {
         'X-CSRFToken': csrfToken
       },

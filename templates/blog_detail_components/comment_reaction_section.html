@@ -2,7 +2,7 @@
 
 <div class="row d-flex" id="grid-container">
     <div class="col-xs-2 col-sm-2 item-a like-btn" data-id="{{ comment.id }}"
-        data-csrf-token="{{ csrf_token }}" onclick="submitLike(this)">
+        data-csrf-token="{{ csrf_token }}" data-href="{% url 'comment_like' blog.pk blog.slug comment.pk %}" onclick="submitLike(this)">
         <div>
             {% user_likes_comment comment.pk as user_liked_comment %}
 

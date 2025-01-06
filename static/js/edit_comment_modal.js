@@ -27,7 +27,7 @@ function submitLike(commentLikeButtonObject) {
     const likeButton = commentLikeButtonObject;
     const commentId = likeButton.getAttribute('data-id');
     const csrftoken = likeButton.getAttribute('data-csrf-token');
-    const url = commentId + "/comment_like/";
+    const url = likeButton.getAttribute('data-href');
 
     fetch(url, {
         method: "POST",

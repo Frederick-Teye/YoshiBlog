@@ -141,7 +141,7 @@ def comment_update_view(request, pk, blog_slug, comment_pk):
         if form.is_valid():
             form.instance.author = request.user
             form.save()
-            return redirect("blog_detail", pk=blog.pk)
+            return redirect("blog_detail", pk=blog.pk, blog_slug=blog_slug)
     else:
         form = CommentForm(instance=comment)
 

@@ -179,10 +179,10 @@ def comment_like_view(request, pk, blog_slug, comment_pk):
         comment.likes.remove(request.user)
     else:
         comment.likes.add(request.user)
-    return render(
+    return TemplateResponse(
         request,
         "blog_detail_components/comment_reaction_section.html",
-        {"comment": comment},
+        {"comment": comment, "blog": blog},
     )
 
 

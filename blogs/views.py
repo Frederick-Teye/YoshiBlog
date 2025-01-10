@@ -61,12 +61,12 @@ def blog_create_view(request):
             while Blog.objects.filter(slug=original_slug).exists:
                 counter += 1
                 if counter == 1:
-                    original_slug + "-" + str(counter)
+                    original_slug = original_slug + "-" + str(counter)
                 elif 1 < counter and counter <= 10:
-                    original_slug[:-1] + str(counter)
+                    original_slug = original_slug[:-1] + str(counter)
                 elif counter > 10:
-                    original_slug[:-2] + str(counter)
-                    
+                    original_slug = original_slug[:-2] + str(counter)
+
             form.instance.slug = original_slug
             blog_model_instance = form.save()
             return redirect(

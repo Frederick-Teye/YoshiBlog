@@ -58,7 +58,7 @@ def blog_create_view(request):
             form.instance.author = request.user
             original_slug = slugify(form.instance.title)
             counter = 0
-            while Blog.objects.filter(slug=original_slug).exists:
+            while Blog.objects.filter(slug=original_slug).exists():
                 counter += 1
                 if counter == 1:
                     original_slug = original_slug + "-" + str(counter)

@@ -52,6 +52,14 @@ def close_code(value: str):
     return new_value
 
 
+@register.filter
+def truncatewords_60(value: str):
+    limit = limit_of_60_words(value)
+    new_string = value[: limit + 1]
+    new_string = new_string
+    return new_string
+
+
 # markdown
 @register.filter()
 @stringfilter

@@ -48,7 +48,8 @@ def total_backticks(value: str):
 def close_code(value: str):
     if not isinstance(value, str):
         return value
-    return value + "```"
+    new_value = value + "\n```"
+    return new_value
 
 
 # markdown

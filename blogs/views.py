@@ -74,6 +74,7 @@ def blog_update_view(request, pk):
         form = BlogForm(request.POST, instance=blog)
         if form.is_valid():
             form.instance.author = request.user
+            form.instance.slug = blog.slug
             blog_model_instance = form.save()
             return redirect(
                 "blog_detail",

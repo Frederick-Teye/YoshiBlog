@@ -60,6 +60,24 @@ def truncatewords_60(value: str):
     return new_string
 
 
+def limit_of_60_words(value: str):
+    word_counter = 0
+    character_counter = 0
+    in_word = False
+    for i in value:
+        character_counter += 1
+        if i != " ":
+            if not in_word:
+                word_counter += 1
+                in_word = True
+        else:
+            in_word = False
+
+        if word_counter == 60:
+            break
+    return character_counter
+
+
 # markdown
 @register.filter()
 @stringfilter

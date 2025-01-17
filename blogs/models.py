@@ -17,6 +17,7 @@ class Blog(models.Model):
         blank=True,
         related_name="blog_likes",
     )
+    tags = TaggableManager()
     slug = models.SlugField(blank=True, null=True)
 
     def __str__(self):

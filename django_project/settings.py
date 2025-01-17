@@ -333,3 +333,7 @@ logging.config.dictConfig(
         },
     }
 )
+
+
+# https://django-taggit.readthedocs.io/en/latest/getting_started.html
+TAGGIT_CASE_INSENSITIVE = True

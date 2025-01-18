@@ -22,6 +22,7 @@ class BlogForm(ModelForm):
     class Meta:
         model = Blog
         fields = (
+            "tags",
             "title",
             "body",
         )

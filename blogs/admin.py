@@ -3,8 +3,6 @@ from .models import Blog, Comment
 
 # Register your models here.
 
-admin.site.register(Blog, BlogAdmin)
-
 
 class BlogAdmin(admin.ModelAdmin):
     list_display = ["title", "get_tags"]
@@ -14,6 +12,9 @@ class BlogAdmin(admin.ModelAdmin):
 
     def get_tags(self, obj):
         return ", ".join(o for o in obj.tags.names())
+
+
+admin.site.register(Blog, BlogAdmin)
 
 
 admin.site.register(Comment)

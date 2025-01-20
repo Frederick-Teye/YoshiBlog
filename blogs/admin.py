@@ -3,7 +3,7 @@ from .models import Blog, Comment
 
 # Register your models here.
 
-admin.site.register(Blog)
+admin.site.register(Blog, BlogAdmin)
 
 
 class BlogAdmin(admin.ModelAdmin):

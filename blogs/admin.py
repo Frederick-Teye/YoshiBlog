@@ -10,6 +10,7 @@ class BlogAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         return super().get_queryset(request).prefetch_related("tags")
 
+    @admin.display(description="tags")
     def get_tags(self, obj):
         return ", ".join(o for o in obj.tags.names())
 

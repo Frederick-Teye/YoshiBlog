@@ -13,6 +13,9 @@
         <div class="col-sm-3">
             <!--Add tags here-->
             <span>Tags</span>
+            {% for tag in tags %}
+            <div>{{ tag }}</div>
+            {% endfor %}
         </div>
         <section class="col-sm-9">
                 <div class="row mb-4">

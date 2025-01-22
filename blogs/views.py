@@ -18,8 +18,11 @@ def blog_list_view(request):
     paginator = Paginator(blogs, 3)  # Show 3 blogs per page.
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
+    tag_names = list(Blog.objects.values_list("tags__name", flat=True).distinct())
     template = "blog_list.html"
-    return TemplateResponse(request, template, {"page_obj": page_obj})
+    return TemplateResponse(
+        request, template, {"page_obj": page_obj, "tags": tag_names}
+    )
 
 
 def blog_detail_view(request, pk, blog_slug):

@@ -11,6 +11,7 @@ from .views import (
     comment_delete_view,
     comment_like_view,
     comment_update_view,
+    list_blog_tagged,
 )
 
 

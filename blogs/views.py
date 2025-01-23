@@ -219,3 +219,16 @@ def check_and_log_wrong_slug(request, blog, blog_slug):
             blog.slug,
             referrer,
         )
+
+
+def list_blog_tagged(request, tag_name):
+    # list view that list blogs with a particular tagname
+    blogs = Blog.objects.filter(tags__name__in=[tag_name]).order_by("-date")
+    paginator = Paginator(blogs, 3)  # Show 3 blogs per page.
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+    tag_names = list(Blog.objects.values_list("tags__name", flat=True).distinct())
+    template = "blog_list.html"
+    return TemplateResponse(
+        request, template, {"page_obj": page_obj, "tags": tag_names}
+    )

@@ -31,5 +31,6 @@ urlpatterns = [
     path("<int:pk>/<slug:blog_slug>/", include(comment_patterns)),
     path("<int:pk>/<slug:blog_slug>/", blog_detail_view, name="blog_detail"),
     path("new/", blog_create_view, name="blog_new"),
+    path("<str:tag_name>", list_blog_tagged(), name="list_blog_tagged"),
     path("", blog_list_view, name="blog_list"),
 ]

@@ -15,7 +15,7 @@
             <span>Tags</span>
             {% for tag in tags %}
                 {% if tag is not None %}
-                <div>{{ tag }}</div>
+                <div><a href="{% url 'list_blog_tagged' tag %}">{{ tag }}</a></div>
                 {% endif %}
             {% endfor %}
         </div>

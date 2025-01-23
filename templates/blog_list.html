@@ -14,7 +14,9 @@
             <!--Add tags here-->
             <span>Tags</span>
             {% for tag in tags %}
-            <div>{{ tag }}</div>
+                {% if tag is not None %}
+                <div>{{ tag }}</div>
+                {% endif %}
             {% endfor %}
         </div>
         <section class="col-sm-9">

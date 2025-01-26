@@ -57,8 +57,12 @@ def blog_create_view(request):
     if request.method == "POST":
         form = BlogForm(request.POST)
         if form.is_valid():
+            sanitized_title = sanitize_input(form.instance.title)
+            sanitized_body = sanitize_input(form.instance.body)
+            form.instance.title = sanitized_title
+            form.instance.body = sanitized_body
             form.instance.author = request.user
-            original_slug = slugify(form.instance.title)
+            original_slug = slugify(sanitized_title)
             counter = 0
             while Blog.objects.filter(slug=original_slug).exists():
                 counter += 1

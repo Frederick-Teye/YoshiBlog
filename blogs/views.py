@@ -233,8 +233,6 @@ def list_blog_tagged(request, tag_name):
     )
 
 
-def attribute_filter(tag, attr, value):
-    if tag == "a" and attr == "href":
-        if "javascript" in value or "alert" in value:
-            return None
-    return value
+def sanitize_input(user_input):
+    tags = nh3.ALLOWED_TAGS - {"article"}
+    return nh3.clean(user_input, tags=tags)

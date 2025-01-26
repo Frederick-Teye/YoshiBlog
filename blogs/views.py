@@ -180,6 +180,8 @@ def comment_create_view(
     check_and_log_wrong_slug(request, blog, blog_slug)
     form = CommentForm(request.POST)
     if form.is_valid():
+        sanitize_comment = sanitize_input(form.instance.comment)
+        form.instance.comment = sanitize_comment
         form.instance.author = request.user
         form.instance.blog = blog
         comment_model_instance = form.save()

@@ -88,6 +88,10 @@ def blog_update_view(request, pk):
     if request.method == "POST":
         form = BlogForm(request.POST, instance=blog)
         if form.is_valid():
+            sanitize_title = sanitize_input(form.instance.title)
+            sanitize_body = sanitize_input(form.instance.body)
+            form.instance.title = sanitize_title
+            form.instance.body = sanitize_body
             form.instance.author = request.user
             form.instance.slug = blog.slug
             blog_model_instance = form.save()

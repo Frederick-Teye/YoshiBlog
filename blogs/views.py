@@ -231,3 +231,10 @@ def list_blog_tagged(request, tag_name):
     return TemplateResponse(
         request, template, {"page_obj": page_obj, "tags": tag_names}
     )
+
+
+def attribute_filter(tag, attr, value):
+    if tag == "a" and attr == "href":
+        if "javascript" in value or "alert" in value:
+            return None
+    return value

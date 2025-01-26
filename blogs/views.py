@@ -161,6 +161,8 @@ def comment_update_view(request, pk, blog_slug, comment_pk):
     if request.method == "POST":
         form = CommentForm(request.POST, instance=comment)
         if form.is_valid():
+            sanitize_comment = sanitize_input(form.instance.comment)
+            form.instance.comment = sanitize_comment
             form.instance.author = request.user
             form.save()
             return redirect("blog_detail", pk=blog.pk, blog_slug=blog_slug)

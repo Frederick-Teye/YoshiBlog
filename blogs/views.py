@@ -198,7 +198,7 @@ def comment_create_view(
         return TemplateResponse(
             request,
             "blog_detail_components/comment.html",
-            {"comment": comment_model_instance},
+            {"comment": comment_model_instance, "blog": blog},
         )
 
 

@@ -13,10 +13,10 @@
             {% if comment.author.pk == request.user.pk %}
             <div class="col-1">
                 <div class="btn-group dropstart">
-                    <button type="button" class="btn btn-link meat-balls-icon" data-bs-toggle="dropdown"
+                    <div class="meat-balls-icon" data-bs-toggle="dropdown"
                         aria-expanded="false" aria-label="Click to delete or edit comment">
                         <i class="bi bi-three-dots" style="font-size: 1rem; color: black;"></i>
-                    </button>
+                    </div>
                     <ul class="dropdown-menu">
                         <li>
                             <!-- Button trigger edit comment modal -->

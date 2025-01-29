@@ -54,7 +54,7 @@ def close_code(value: str):
 
 @register.filter
 def truncatewords(blog_content: str, number_of_words: int):
-    limit = limit_of_60_words(blog_content, number_of_words)
+    limit = limit_of_words(blog_content, number_of_words)
     new_string = blog_content[: limit + 1]
     new_string = new_string
     return new_string

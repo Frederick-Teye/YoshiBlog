@@ -60,11 +60,11 @@ def truncatewords(blog_content: str, number_of_words: int):
     return new_string
 
 
-def limit_of_60_words(value: str):
+def limit_of_words(blog_content: str, words_limit: int):
     word_counter = 0
     character_counter = 0
     in_word = False
-    for i in value:
+    for i in blog_content:
         character_counter += 1
         if i != " ":
             if not in_word:
@@ -73,7 +73,7 @@ def limit_of_60_words(value: str):
         else:
             in_word = False
 
-        if word_counter == 60:
+        if word_counter == words_limit:
             break
     return character_counter
 

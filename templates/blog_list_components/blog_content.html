@@ -60,7 +60,7 @@
             <h2 class="card-title h5">{{ blog.title }}</h2>
             
             <div class="card-text">
-                {% with blog.body|truncatewords_60 as blog_body %}
+                {% with blog.body|custom_truncatewords:60 as blog_body %}
 
                 {% if "```" in blog_body%}
                     {% total_backticks blog_body as blog_body_total_backticks %} 

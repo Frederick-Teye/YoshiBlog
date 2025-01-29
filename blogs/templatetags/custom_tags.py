@@ -78,6 +78,14 @@ def limit_of_words(blog_content: str, words_limit: int):
     return character_counter
 
 
+@register.filter
+def divide(value, divisor):
+    try:
+        return value / divisor
+    except (ZeroDivisionError, TypeError):
+        return ""
+
+
 # markdown
 @register.filter()
 @stringfilter

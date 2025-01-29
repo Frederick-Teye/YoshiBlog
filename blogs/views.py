@@ -36,7 +36,10 @@ def blog_detail_view(request, pk, blog_slug):
         is_ordered_by_likes = False
     total_comments = blog.comments.count()
     total_likes = blog.likes.count()
-    did_user_comment = blog.comments.filter(author=request.user).exists()
+    if request.user.is_authenticated:
+        did_user_comment = blog.comments.filter(author=request.user).exists()
+    else:
+        did_user_comment = False
     form = CommentForm()
     context = {
         "blog": blog,

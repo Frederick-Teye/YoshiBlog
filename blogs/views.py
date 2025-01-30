@@ -12,6 +12,7 @@ from .models import Blog, Comment
 logger = logging.getLogger(__name__)
 
 
+@login_required
 def blog_list_view(request):
     blogs = Blog.objects.all().order_by("-date")
     paginator = Paginator(blogs, 3)  # Show 3 blogs per page.

@@ -24,6 +24,7 @@ def blog_list_view(request):
     )
 
 
+@login_required
 def blog_detail_view(request, pk, blog_slug):
     blog = get_object_or_404(Blog.objects.all(), pk=pk)
     check_and_log_wrong_slug(request, blog, blog_slug)

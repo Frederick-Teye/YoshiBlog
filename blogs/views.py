@@ -12,7 +12,6 @@ from .models import Blog, Comment
 logger = logging.getLogger(__name__)
 
 
-@login_required
 def blog_list_view(request):
     blogs = Blog.objects.all().order_by("-date")
     paginator = Paginator(blogs, 3)  # Show 3 blogs per page.
@@ -25,7 +24,6 @@ def blog_list_view(request):
     )
 
 
-@login_required
 def blog_detail_view(request, pk, blog_slug):
     blog = get_object_or_404(Blog.objects.all(), pk=pk)
     check_and_log_wrong_slug(request, blog, blog_slug)

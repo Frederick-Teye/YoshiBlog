@@ -26,7 +26,8 @@
             <button type="button" class="btn btn-link text-decoration-none position-relative" style="color: black;">
                 <i class="bi bi-hand-thumbs-up me-2" style="font-size: 1.2em;"></i>
                 <span class="icon-label"> Like</span>
-        
+                
+                {% total_blog_likes blog.pk as total_likes %}
                 {% if total_likes %}
                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                         {% total_blog_likes blog.pk %}

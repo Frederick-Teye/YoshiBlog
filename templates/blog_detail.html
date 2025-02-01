@@ -85,7 +85,29 @@
             </div>
         </div>
         <h1> {{blog.title}} </h1>
-        <p> {{ blog.body | markdown | safe }} </p>
+        {% if user.is_authenticated %}
+            <div> {{ blog.body | markdown | safe }} </div>
+        {% else %}
+            <div>
+                {% with blog.body|divide:2 as half_blog %}
+                <p>{{ half_blog }}</p>
+                    {% with blog.body|custom_truncatewords:half_blog as blog_body %}
+                
+                        {% if "```" in blog_body%}
+                            {% close_code blog_body as blog_body_code_closed %}
+                            {{ blog_body_code_closed | markdown | safe}}
+                        {% else %}
+                            {{ blog_body | markdown | safe }}
+                        {% endif %}
+                
+                    {% endwith %}
+                {% endwith %}
+                {% if blog.body|wordcount > 60 %}
+                <a href="{% url 'account_login' %}" class="text-decoration-none">more</a>
+                {% endif %}
+            </div>
+        {% endif %}
+        
 
         <div id="blog_{{ blog.pk }}_detail_reaction_section">
             {% include 'blog_detail_components/reaction_section.html' %}

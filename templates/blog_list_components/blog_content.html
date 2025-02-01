@@ -62,17 +62,13 @@
             <div class="card-text">
                 {% with blog.body|custom_truncatewords:60 as blog_body %}
 
-                {% if "```" in blog_body%}
-                    {% total_backticks blog_body as blog_body_total_backticks %} 
-                    {% if blog_body_total_backticks|divisibleby:"2" is not True %}
+                    {% if "```" in blog_body%}
                         {% close_code blog_body as blog_body_code_closed %}
-                        {{ blog_body_code_closed | markdown | safe }}
+                        {{ blog_body_code_closed | markdown | safe}}                        
                     {% else %}
                         {{ blog_body | markdown | safe }}
                     {% endif %}
-                {% else %}
-                    {{ blog_body }}
-                {%endif%}
+
                 {% endwith %}
                 {% if blog.body|wordcount > 60 %}
                 <a href="{% url 'blog_detail' blog.pk blog.slug %}" class="text-decoration-none">more</a>

@@ -103,7 +103,7 @@
                     {% endwith %}
                 {% endwith %}
                 {% if blog.body|wordcount > 60 %}
-                <a href="{% url 'account_login' %}?next={% url 'blog_detail' blog.pk blog.slug %}" class="text-decoration-none">Sign in to Read on</a>
+                    <a href="{% url 'account_login' %}?next={% url 'blog_detail' blog.pk blog.slug %}" class="text-decoration-none">Sign in to Read on</a>
                 {% endif %}
             </div>
         {% endif %}

@@ -39,7 +39,6 @@ def total_comments(pk):
     return blog_instance.comments.count()
 
 
-@register.simple_tag()
 def total_backticks(value: str):
     return value.count("```")
 

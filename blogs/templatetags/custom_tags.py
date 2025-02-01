@@ -47,8 +47,9 @@ def total_backticks(value: str):
 def close_code(value: str):
     if not isinstance(value, str):
         return value
-    total_backticks = total_backticks(value)
-    if (total_backticks % 2) != 0:
+    # named total_bt total_bt to stop interfering with the function name total_backticks
+    total_bt = total_backticks(value)
+    if (total_bt % 2) != 0:
         return value + "\n```"
     else:
         return value

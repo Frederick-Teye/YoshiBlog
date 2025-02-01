@@ -48,8 +48,11 @@ def total_backticks(value: str):
 def close_code(value: str):
     if not isinstance(value, str):
         return value
-    new_value = value + "\n```"
-    return new_value
+    total_backticks = total_backticks(value)
+    if (total_backticks % 2) != 0:
+        return value + "\n```"
+    else:
+        return value
 
 
 @register.filter

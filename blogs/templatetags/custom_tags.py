@@ -81,10 +81,10 @@ def limit_of_words(blog_content: str, words_limit: int):
     return character_counter
 
 
-@register.filter
-def divide(value, divisor):
+@register.filter()
+def divide(value: str, divisor: int):
     try:
-        return value / divisor
+        return int(len(value.split()) / divisor)
     except (ZeroDivisionError, TypeError):
         return ""
 

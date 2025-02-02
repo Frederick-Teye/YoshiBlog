@@ -8,8 +8,10 @@ $(document).ready(function() {
 // like functionality for list view
 $(document).ready(function() {
   $(document).on('click', '.blog-like-section', function() {
-    let nextHref = window.location.href;
-    window.location.href = "/accounts/login/?next=" + nextHref;
+    let pk = $(this).data('id');
+    let nextHref = window.location.href;    
+    let blogReactionId = "#blog_" + pk + "_list_item_reaction_section";
+    window.location.href = "/accounts/login/?next=" + nextHref + blogReactionId;
   });
 });
 

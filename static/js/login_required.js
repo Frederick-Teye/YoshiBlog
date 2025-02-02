@@ -1,7 +1,7 @@
 $(document).ready(function() {
   $(document).on('click', '#detail-view-like', function() {
     let nextHref = window.location.href;
-    window.location.href = "/accounts/login/?next=" + nextHref;
+    window.location.href = "/accounts/login/?next=" + nextHref + "#detail-view-like";
   });
 });
 

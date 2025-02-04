@@ -57,7 +57,7 @@ function changeCommentFieldText() {
 function submitCommentForm(formObject){
     let nextHref = window.location.href;
     let blog_pk = formObject.getAttribute("data-id");
-    let formId = "comment-input-box-" + blog_pk;
+    let formId = "#comment-input-box-" + blog_pk;
     window.location.href = "/accounts/login/?next=" + nextHref + formId;
 }
 

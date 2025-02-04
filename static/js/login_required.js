@@ -18,10 +18,12 @@ $(document).ready(function() {
 
 const addBlogContainer = document.getElementById("text-field-container");
 
-addBlogContainer.addEventListener('click', function() {
-    let nextHref = window.location.href;
-    window.location.href = "/accounts/login/?next=" + nextHref;
-});
+if (addBlogContainer != null) {
+    addBlogContainer.addEventListener('click', function() {
+        let nextHref = window.location.href;
+        window.location.href = "/accounts/login/?next=" + nextHref;
+    });
+}
 
 
 

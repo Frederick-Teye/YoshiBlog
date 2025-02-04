@@ -42,7 +42,9 @@ function changeCommentFieldText() {
 
 function submitCommentForm(formObject){
     let nextHref = window.location.href;
-    window.location.href = "/accounts/login/?next=" + nextHref;
+    let blog_pk = $(formObject).data("id");
+    let formId = "comment-input-box-" + blog_pk;
+    window.location.href = "/accounts/login/?next=" + nextHref + formId;
 }
 
 

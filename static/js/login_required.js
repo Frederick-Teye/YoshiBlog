@@ -18,7 +18,7 @@ $(document).ready(function() {
 
 const addBlogContainer = document.getElementById("text-field-container");
 
-if (addBlogContainer != null) {
+if (addBlogContainer) {
     addBlogContainer.addEventListener('click', function() {
         let nextHref = window.location.href;
         window.location.href = "/accounts/login/?next=" + nextHref;

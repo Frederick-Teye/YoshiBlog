@@ -90,7 +90,6 @@
         {% else %}
             <div>
                 {% with blog.body|divide:2 as half_blog %}
-                <p>{{ half_blog }}</p>
                     {% with blog.body|custom_truncatewords:half_blog as blog_body %}
                 
                         {% if "```" in blog_body%}

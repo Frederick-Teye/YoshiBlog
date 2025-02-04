@@ -1,18 +1,30 @@
 $(document).ready(function() {
-  $(document).on('click', '#detail-view-like', function() {
-    let nextHref = window.location.href;
-    window.location.href = "/accounts/login/?next=" + nextHref + "#detail-view-like";
-  });
-});
+    function handleDetailViewLike() {
+        $(document).on('click', '#detail-view-like', function() {
+            let nextHref = window.location.href;
+            window.location.href = "/accounts/login/?next=" + nextHref + "#detail-view-like";
+        });
+    }
 
-// like functionality for list view
-$(document).ready(function() {
-  $(document).on('click', '.blog-like-section', function() {
-    let pk = $(this).data('id');
-    let nextHref = window.location.href;    
-    let blogReactionId = "#blog_" + pk + "_list_item_reaction_section";
-    window.location.href = "/accounts/login/?next=" + nextHref + blogReactionId;
-  });
+    function handleListViewLike() {
+        $('.blog-like-section').click(function() {
+            let pk = $(this).data('id');
+            let nextHref = window.location.href;    
+            let blogReactionId = "#blog_" + pk + "_list_item_reaction_section";
+            window.location.href = "/accounts/login/?next=" + nextHref + blogReactionId;
+        });
+    }
+
+    function autoExpandTextArea() {
+        $('.no-scrollbars').on('keyup keypress', function() {
+            $(this).height(0);
+            $(this).height(this.scrollHeight);
+        });
+    }
+
+    handleDetailViewLike();
+    handleListViewLike();
+    autoExpandTextArea();
 });
 
 
@@ -44,29 +56,14 @@ function changeCommentFieldText() {
 
 function submitCommentForm(formObject){
     let nextHref = window.location.href;
-    let blog_pk = $(formObject).data("id");
+    let blog_pk = formObject.getAttribute("data-id");
     let formId = "comment-input-box-" + blog_pk;
     window.location.href = "/accounts/login/?next=" + nextHref + formId;
 }
 
-
-document.addEventListener('DOMContentLoaded', function() {
-    const editCommentModal = document.getElementById('editCommentModal');
-
-    if (editCommentModal) {
-        let nextHref = window.location.href;
-        window.location.href = "/accounts/login/?next=" + nextHref;
-    }
-});
 
 function submitLike(commentLikeButtonObject) {
     let nextHref = window.location.href;
     window.location.href = "/accounts/login/?next=" + nextHref;
 }
 
-$(document).ready(function() {
-    $('.no-scrollbars').on('keyup keypress', function() {
-        $(this).height(0);
-        $(this).height(this.scrollHeight);
-    });
-});

@@ -64,6 +64,8 @@ function submitCommentForm(formObject){
 
 function submitLike(commentLikeButtonObject) {
     let nextHref = window.location.href;
-    window.location.href = "/accounts/login/?next=" + nextHref;
+    let commentIdInDatabase = commentLikeButtonObject.getAttribute("data-id");
+    let commentIdInHtml = "#comment-reaction-" + commentIdInDatabase;
+    window.location.href = "/accounts/login/?next=" + nextHref + commentIdInHtml;
 }
 

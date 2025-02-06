@@ -1,55 +1,58 @@
 $(document).ready(function() {
-  $(document).on('click', '#detail-view-like', function() {
-    var pk = $(this).data('id');
-    var csrfToken = $(this).data('csrf-token');
+  function handleDetailViewLike() {
+    $(document).on('click', '#detail-view-like', function() {
+      var pk = $(this).data('id');
+      var csrfToken = $(this).data('csrf-token');
 
-    $.ajax({
-      type: 'POST',
-      url: $(this).data('href'),
-      headers: {
-        'X-CSRFToken': csrfToken
-      },
-      data: {
-        "blog_id": pk,
-      },
-      success: function(data) {
-        var id = "#blog_" + pk + "_detail_reaction_section";
-        $(id).html(data);
-      },
-      error: function(rs, e) {
-        console.log(rs.responseText);
-      },
+      $.ajax({
+        type: 'POST',
+        url: $(this).data('href'),
+        headers: {
+          'X-CSRFToken': csrfToken
+        },
+        data: {
+          "blog_id": pk,
+        },
+        success: function(data) {
+          var id = "#blog_" + pk + "_detail_reaction_section";
+          $(id).html(data);
+        },
+        error: function(rs, e) {
+          console.log(rs.responseText);
+        },
+      });
     });
-  });
-});
+  }
 
+  function handleListViewLike() {
+    $(document).on('click', '.blog-like-section', function() {
+      var $this = $(this);
+      var pk = $this.data('id');
+      var csrfToken = $this.data('csrf-token');
+      let urlRoute = $this.data('href');
 
-// like functionality for list view
-$(document).ready(function() {
-  $(document).on('click', '.blog-like-section', function() {
-    var $this = $(this);
-    var pk = $this.data('id');
-    var csrfToken = $this.data('csrf-token');
-    let urlRoute = $this.data('href');
-
-    $.ajax({
-      type: 'POST',
-      url: urlRoute,
-      headers: {
-        'X-CSRFToken': csrfToken
-      },
-      data: {
-        "blog_id": pk,
-      },
-      success: function(data) {
-        var id = "#blog_" + pk + "_list_item_reaction_section";
-        $(id).html(data)
-      },
-      error: function(rs, e) {
-        console.log(rs.responseText);
-      },
+      $.ajax({
+        type: 'POST',
+        url: urlRoute,
+        headers: {
+          'X-CSRFToken': csrfToken
+        },
+        data: {
+          "blog_id": pk,
+        },
+        success: function(data) {
+          var id = "#blog_" + pk + "_list_item_reaction_section";
+          $(id).html(data)
+        },
+        error: function(rs, e) {
+          console.log(rs.responseText);
+        },
+      });
     });
-  });
+  }
+
+  handleDetailViewLike();
+  handleListViewLike();  
 });
 
 

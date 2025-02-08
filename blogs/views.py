@@ -235,6 +235,7 @@ def check_and_log_wrong_slug(request, blog, blog_slug):
         )
 
 
+@login_required
 def list_blog_tagged(request, tag_name):
     # list view that list blogs with a particular tagname
     blogs = Blog.objects.filter(tags__name__in=[tag_name]).order_by("-date")

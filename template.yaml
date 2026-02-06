@@ -48,6 +48,10 @@ Resources:
           AWS_STORAGE_BUCKET_NAME: !Ref S3Bucket
           SECRET_KEY: !Ref SecretKey
           API_GATEWAY_DOMAIN: !Sub '${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com'
+    Metadata:
+      DockerTag: latest
+      DockerContext: .
+      Dockerfile: Dockerfile
 
   DjangoImage:
     Type: AWS::Serverless::ImageRepository

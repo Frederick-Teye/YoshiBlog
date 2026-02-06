@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 if os.environ.get('AWS_LAMBDA_FUNCTION_NAME'):  # In Lambda
     ssm = boto3.client('ssm', region_name=os.environ.get('AWS_REGION', 'us-east-1'))
-    SECRET_KEY = ssm.get_parameter(Name='/django/secret_key', WithDecryption=True)['Parameter']['Value']
+    SECRET_KEY = ssm.get_parameter(Name='/yoshiblog/secret_key', WithDecryption=True)['Parameter']['Value']
 elif IS_HEROKU_APP:
     SECRET_KEY = os.environ.get("SECRET_KEY")
 else:
@@ -91,8 +91,8 @@ if os.environ.get('AWS_LAMBDA_FUNCTION_NAME'):  # In Lambda
     SOCIALACCOUNT_PROVIDERS = {
         "google": {
             "APP": {
-                "client_id": ssm.get_parameter(Name='/django/google_client_id', WithDecryption=True)['Parameter']['Value'],
-                "secret": ssm.get_parameter(Name='/django/google_secret', WithDecryption=True)['Parameter']['Value'],
+                "client_id": ssm.get_parameter(Name='/yoshiblog/google_client_id', WithDecryption=True)['Parameter']['Value'],
+                "secret": ssm.get_parameter(Name='/yoshiblog/google_secret', WithDecryption=True)['Parameter']['Value'],
                 "key": "",
             },
             "SCOPE": ["profile", "email"],
@@ -100,8 +100,8 @@ if os.environ.get('AWS_LAMBDA_FUNCTION_NAME'):  # In Lambda
         },
         "github": {
             "APP": {
-                "client_id": ssm.get_parameter(Name='/django/github_client_id', WithDecryption=True)['Parameter']['Value'],
-                "secret": ssm.get_parameter(Name='/django/github_secret', WithDecryption=True)['Parameter']['Value'],
+                "client_id": ssm.get_parameter(Name='/yoshiblog/github_client_id', WithDecryption=True)['Parameter']['Value'],
+                "secret": ssm.get_parameter(Name='/yoshiblog/github_secret', WithDecryption=True)['Parameter']['Value'],
                 "key": "",
             },
             "VERIFIED_EMAIL": True,

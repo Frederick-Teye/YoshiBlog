@@ -2,6 +2,25 @@ AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: YoshiBlog Django App
 
+Parameters:
+  DBName:
+    Type: String
+    Default: yoshiblogdb
+  DBUser:
+    Type: String
+    Default: yoshibloguser
+  DBPassword:
+    Type: String
+    NoEcho: true
+  DBHost:
+    Type: String
+  DBPort:
+    Type: String
+    Default: '5432'
+  SecretKey:
+    Type: String
+    NoEcho: true
+
 Globals:
   Function:
     Timeout: 30

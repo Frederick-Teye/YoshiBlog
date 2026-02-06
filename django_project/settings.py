@@ -18,9 +18,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 # SECURITY WARNING: keep the secret key used in production secret!
-if os.environ.get('AWS_LAMBDA_FUNCTION_NAME'):  # In Lambda
-    ssm = boto3.client('ssm', region_name=os.environ.get('AWS_REGION', 'us-east-1'))
-    SECRET_KEY = ssm.get_parameter(Name='/yoshiblog/secret_key', WithDecryption=True)['Parameter']['Value']
+if os.environ.get("AWS_LAMBDA_FUNCTION_NAME"):  # In Lambda
+    ssm = boto3.client("ssm", region_name=os.environ.get("AWS_REGION", "us-east-1"))
+    SECRET_KEY = ssm.get_parameter(Name="/yoshiblog/secret_key", WithDecryption=True)[
+        "Parameter"
+    ]["Value"]
 elif IS_HEROKU_APP:
     SECRET_KEY = os.environ.get("SECRET_KEY")
 else:
@@ -29,19 +31,23 @@ else:
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug
 # SECURITY WARNING: don't run with debug turned on in production!
-if IS_HEROKU_APP or os.environ.get('AWS_LAMBDA_FUNCTION_NAME'):
+if IS_HEROKU_APP or os.environ.get("AWS_LAMBDA_FUNCTION_NAME"):
     DEBUG = False
 else:
     DEBUG = True
 
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
-if os.environ.get('AWS_LAMBDA_FUNCTION_NAME'):
-    ALLOWED_HOSTS = [os.environ.get('API_GATEWAY_DOMAIN')]
+if os.environ.get("AWS_LAMBDA_FUNCTION_NAME"):
+    ALLOWED_HOSTS = [os.environ.get("API_GATEWAY_DOMAIN")]
 else:
     ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]
 
-CSRF_TRUSTED_ORIGINS = [f"https://{os.environ.get('API_GATEWAY_DOMAIN')}"] if os.environ.get('API_GATEWAY_DOMAIN') else []
+CSRF_TRUSTED_ORIGINS = (
+    [f"https://{os.environ.get('API_GATEWAY_DOMAIN')}"]
+    if os.environ.get("API_GATEWAY_DOMAIN")
+    else []
+)
 
 
 # Application definition
@@ -86,13 +92,17 @@ MIDDLEWARE = [
 
 
 # Provider specific settings
-if os.environ.get('AWS_LAMBDA_FUNCTION_NAME'):  # In Lambda
-    ssm = boto3.client('ssm', region_name=os.environ.get('AWS_REGION', 'us-east-1'))
+if os.environ.get("AWS_LAMBDA_FUNCTION_NAME"):  # In Lambda
+    ssm = boto3.client("ssm", region_name=os.environ.get("AWS_REGION", "us-east-1"))
     SOCIALACCOUNT_PROVIDERS = {
         "google": {
             "APP": {
-                "client_id": ssm.get_parameter(Name='/yoshiblog/google_client_id', WithDecryption=True)['Parameter']['Value'],
-                "secret": ssm.get_parameter(Name='/yoshiblog/google_secret', WithDecryption=True)['Parameter']['Value'],
+                "client_id": ssm.get_parameter(
+                    Name="/yoshiblog/google_client_id", WithDecryption=True
+                )["Parameter"]["Value"],
+                "secret": ssm.get_parameter(
+                    Name="/yoshiblog/google_secret", WithDecryption=True
+                )["Parameter"]["Value"],
                 "key": "",
             },
             "SCOPE": ["profile", "email"],
@@ -100,8 +110,12 @@ if os.environ.get('AWS_LAMBDA_FUNCTION_NAME'):  # In Lambda
         },
         "github": {
             "APP": {
-                "client_id": ssm.get_parameter(Name='/yoshiblog/github_client_id', WithDecryption=True)['Parameter']['Value'],
-                "secret": ssm.get_parameter(Name='/yoshiblog/github_secret', WithDecryption=True)['Parameter']['Value'],
+                "client_id": ssm.get_parameter(
+                    Name="/yoshiblog/github_client_id", WithDecryption=True
+                )["Parameter"]["Value"],
+                "secret": ssm.get_parameter(
+                    Name="/yoshiblog/github_secret", WithDecryption=True
+                )["Parameter"]["Value"],
                 "key": "",
             },
             "VERIFIED_EMAIL": True,
@@ -195,13 +209,13 @@ TEMPLATES = [
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASSWORD'),
-        'HOST': os.environ.get('DB_HOST'),
-        'PORT': os.environ.get('DB_PORT', '5432'),
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.environ.get("DB_NAME"),
+        "USER": os.environ.get("DB_USER"),
+        "PASSWORD": os.environ.get("DB_PASSWORD"),
+        "HOST": os.environ.get("DB_HOST"),
+        "PORT": os.environ.get("DB_PORT", "5432"),
     }
 }
 
@@ -259,10 +273,10 @@ LOCALE_PATHS = [BASE_DIR / "locale"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#static-url
-AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
-AWS_S3_REGION_NAME = os.environ.get('AWS_REGION', 'us-east-1')
-AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
-STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/static/'
+AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_STORAGE_BUCKET_NAME")
+AWS_S3_REGION_NAME = os.environ.get("AWS_REGION", "us-east-1")
+AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
+STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/static/"
 
 # https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS
 STATICFILES_DIRS = [BASE_DIR / "static"]

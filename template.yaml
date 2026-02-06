@@ -31,7 +31,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       PackageType: Image
-      ImageUri: !Ref DjangoImage
+      ImageUri: !Sub "public.ecr.aws/${AWS::Account}/yoshiblog-repo:latest"
       Events:
         ApiEvent:
           Type: HttpApi
@@ -54,7 +54,7 @@ Resources:
       Dockerfile: Dockerfile
 
   DjangoImage:
-    Type: AWS::Serverless::ImageRepository
+    Type: AWS::ECR::PublicRepository
     Properties:
       RepositoryName: yoshiblog-repo
 

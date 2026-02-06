@@ -1,4 +1,4 @@
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 Description: YoshiBlog Django App
 
@@ -16,7 +16,7 @@ Parameters:
     Type: String
   DBPort:
     Type: String
-    Default: '5432'
+    Default: "5432"
   SecretKey:
     Type: String
     NoEcho: true
@@ -47,7 +47,7 @@ Resources:
           DB_PORT: !Ref DBPort
           AWS_STORAGE_BUCKET_NAME: !Ref S3Bucket
           SECRET_KEY: !Ref SecretKey
-          API_GATEWAY_DOMAIN: !Sub '${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com'
+          API_GATEWAY_DOMAIN: !Sub "${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com"
     Metadata:
       DockerTag: latest
       DockerContext: .

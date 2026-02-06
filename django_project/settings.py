@@ -1,4 +1,5 @@
 import os
+import boto3
 from decouple import config
 import logging.config
 from django.utils.log import DEFAULT_LOGGING
@@ -17,24 +18,30 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 # SECURITY WARNING: keep the secret key used in production secret!
-if IS_HEROKU_APP:
-    SECRET_KEY = os.environ.get(
-        "SECRET_KEY"
-    )  # Get from environment variable in production
+if os.environ.get('AWS_LAMBDA_FUNCTION_NAME'):  # In Lambda
+    ssm = boto3.client('ssm', region_name=os.environ.get('AWS_REGION', 'us-east-1'))
+    SECRET_KEY = ssm.get_parameter(Name='/django/secret_key', WithDecryption=True)['Parameter']['Value']
+elif IS_HEROKU_APP:
+    SECRET_KEY = os.environ.get("SECRET_KEY")
 else:
     SECRET_KEY = config("SECRET_KEY")  # Local development fallback
 
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug
 # SECURITY WARNING: don't run with debug turned on in production!
-if IS_HEROKU_APP:
+if IS_HEROKU_APP or os.environ.get('AWS_LAMBDA_FUNCTION_NAME'):
     DEBUG = False
 else:
     DEBUG = True
 
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]
+if os.environ.get('AWS_LAMBDA_FUNCTION_NAME'):
+    ALLOWED_HOSTS = [os.environ.get('API_GATEWAY_DOMAIN')]
+else:
+    ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]
+
+CSRF_TRUSTED_ORIGINS = [f"https://{os.environ.get('API_GATEWAY_DOMAIN')}"] if os.environ.get('API_GATEWAY_DOMAIN') else []
 
 
 # Application definition
@@ -56,8 +63,8 @@ INSTALLED_APPS = [
     "allauth.socialaccount.providers.google",
     "crispy_forms",
     "crispy_bootstrap5",
-    "debug_toolbar",
     "taggit",
+    "storages",
     # Local
     "accounts",
     "pages",
@@ -70,7 +77,6 @@ MIDDLEWARE = [
     "whitenoise.middleware.WhiteNoiseMiddleware",  # WhiteNoise
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
-    "debug_toolbar.middleware.DebugToolbarMiddleware",  # Django Debug Toolbar
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
@@ -80,7 +86,28 @@ MIDDLEWARE = [
 
 
 # Provider specific settings
-if IS_HEROKU_APP:
+if os.environ.get('AWS_LAMBDA_FUNCTION_NAME'):  # In Lambda
+    ssm = boto3.client('ssm', region_name=os.environ.get('AWS_REGION', 'us-east-1'))
+    SOCIALACCOUNT_PROVIDERS = {
+        "google": {
+            "APP": {
+                "client_id": ssm.get_parameter(Name='/django/google_client_id', WithDecryption=True)['Parameter']['Value'],
+                "secret": ssm.get_parameter(Name='/django/google_secret', WithDecryption=True)['Parameter']['Value'],
+                "key": "",
+            },
+            "SCOPE": ["profile", "email"],
+            "AUTH_PARAMS": {"access_type": "online"},
+        },
+        "github": {
+            "APP": {
+                "client_id": ssm.get_parameter(Name='/django/github_client_id', WithDecryption=True)['Parameter']['Value'],
+                "secret": ssm.get_parameter(Name='/django/github_secret', WithDecryption=True)['Parameter']['Value'],
+                "key": "",
+            },
+            "VERIFIED_EMAIL": True,
+        },
+    }
+elif IS_HEROKU_APP:
     SOCIALACCOUNT_PROVIDERS = {
         "google": {
             # For each OAuth based provider, either add a ``SocialApp``
@@ -168,9 +195,13 @@ TEMPLATES = [
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
+        'PORT': os.environ.get('DB_PORT', '5432'),
     }
 }
 
@@ -228,7 +259,10 @@ LOCALE_PATHS = [BASE_DIR / "locale"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#static-url
-STATIC_URL = "/static/"
+AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+AWS_S3_REGION_NAME = os.environ.get('AWS_REGION', 'us-east-1')
+AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/static/'
 
 # https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS
 STATICFILES_DIRS = [BASE_DIR / "static"]
@@ -239,7 +273,7 @@ STORAGES = {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
     },
 }
 

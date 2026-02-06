@@ -1,0 +1,54 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: YoshiBlog Django App
+
+Globals:
+  Function:
+    Timeout: 30
+    MemorySize: 1024
+
+Resources:
+  DjangoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      PackageType: Image
+      ImageUri: !Ref DjangoImage
+      Events:
+        ApiEvent:
+          Type: HttpApi
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
+      Environment:
+        Variables:
+          DB_NAME: !Ref DBName
+          DB_USER: !Ref DBUser
+          DB_PASSWORD: !Ref DBPassword
+          DB_HOST: !Ref DBHost
+          DB_PORT: !Ref DBPort
+          AWS_STORAGE_BUCKET_NAME: !Ref S3Bucket
+          SECRET_KEY: !Ref SecretKey
+          API_GATEWAY_DOMAIN: !Sub '${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com'
+
+  DjangoImage:
+    Type: AWS::Serverless::ImageRepository
+    Properties:
+      RepositoryName: yoshiblog-repo
+
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: yoshiblog-static-files
+
+  DBCluster:
+    Type: AWS::RDS::DBCluster
+    Properties:
+      Engine: aurora-dsql
+      MasterUsername: !Ref DBUser
+      MasterUserPassword: !Ref DBPassword
+      DatabaseName: !Ref DBName
+
+Outputs:
+  ApiUrl:
+    Description: API Gateway endpoint URL
+    Value: !Sub https://${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com/

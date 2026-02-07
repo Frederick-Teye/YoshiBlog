@@ -13,6 +13,11 @@ Globals:
     MemorySize: 1024
 
 Resources:
+  ServerlessHttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      StageName: $default
+
   DjangoFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -22,6 +27,7 @@ Resources:
         ApiEvent:
           Type: HttpApi
           Properties:
+            ApiId: !Ref ServerlessHttpApi
             Path: /{proxy+}
             Method: ANY
       Policies:
@@ -36,7 +42,7 @@ Resources:
           DSQL_CLUSTER_ARN: !GetAtt DSQLCluster.ResourceArn
           AWS_STORAGE_BUCKET_NAME: !Ref S3Bucket
           SECRET_KEY: !Ref SecretKey
-          API_GATEWAY_DOMAIN: !Sub "${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com"
+
     Metadata:
       DockerTag: latest
       DockerContext: .

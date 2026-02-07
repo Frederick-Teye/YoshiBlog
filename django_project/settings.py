@@ -307,8 +307,10 @@ AWS_S3_CUSTOM_DOMAIN = (
     f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com" if AWS_STORAGE_BUCKET_NAME else None
 )
 STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/"
-AWS_DEFAULT_ACL = "public-read"
 AWS_QUERYSTRING_AUTH = False
+AWS_S3_OBJECT_PARAMETERS = {
+    "CacheControl": "max-age=31536000, immutable",
+}
 
 # https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS
 STATICFILES_DIRS = [BASE_DIR / "static"]

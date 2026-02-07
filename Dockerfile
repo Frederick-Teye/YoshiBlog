@@ -7,7 +7,8 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
-RUN python manage.py collectstatic --noinput
+ARG COLLECTSTATIC=0
+RUN if [ "$COLLECTSTATIC" = "1" ]; then python manage.py collectstatic --noinput; fi
 
 EXPOSE 8000
 CMD ["gunicorn", "django_project.wsgi:application", "--bind", "0.0.0.0:8000"]

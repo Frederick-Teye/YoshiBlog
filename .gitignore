@@ -17,3 +17,6 @@ media
 
 # python-decouple
 .env
+
+# AWS SAM build artifacts
+.aws-sam/

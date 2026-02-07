@@ -5,8 +5,9 @@ import logging.config
 from django.utils.log import DEFAULT_LOGGING
 from pathlib import Path
 
-# To determine if the code is on Heroku server
-IS_HEROKU_APP = "DYNO" in os.environ and not "CI" in os.environ
+DJANGO_ENV = os.environ.get("DJANGO_ENV", "local").lower()
+IS_LAMBDA = bool(os.environ.get("AWS_LAMBDA_FUNCTION_NAME"))
+IS_PROD = DJANGO_ENV in {"prod", "production", "lambda"} or IS_LAMBDA
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -18,36 +19,43 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 # SECURITY WARNING: keep the secret key used in production secret!
-if os.environ.get("AWS_LAMBDA_FUNCTION_NAME"):  # In Lambda
-    ssm = boto3.client("ssm", region_name=os.environ.get("AWS_REGION", "us-east-1"))
+AWS_REGION = os.environ.get("AWS_REGION", "us-east-1")
+
+if IS_LAMBDA:  # In Lambda
+    ssm = boto3.client("ssm", region_name=AWS_REGION)
     SECRET_KEY = ssm.get_parameter(Name="/yoshiblog/secret_key", WithDecryption=True)[
         "Parameter"
     ]["Value"]
-elif IS_HEROKU_APP:
-    SECRET_KEY = os.environ.get("SECRET_KEY")
 else:
-    SECRET_KEY = config("SECRET_KEY")  # Local development fallback
+    SECRET_KEY = os.environ.get("SECRET_KEY") or config("SECRET_KEY")
 
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug
 # SECURITY WARNING: don't run with debug turned on in production!
-if IS_HEROKU_APP or os.environ.get("AWS_LAMBDA_FUNCTION_NAME"):
-    DEBUG = False
-else:
-    DEBUG = True
+DEBUG = not IS_PROD
 
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
-if os.environ.get("AWS_LAMBDA_FUNCTION_NAME"):
-    ALLOWED_HOSTS = [os.environ.get("API_GATEWAY_DOMAIN")]
+allowed_hosts_env = os.environ.get("ALLOWED_HOSTS")
+if allowed_hosts_env:
+    ALLOWED_HOSTS = [
+        host.strip() for host in allowed_hosts_env.split(",") if host.strip()
+    ]
+elif IS_LAMBDA:
+    api_gateway_domain = os.environ.get("API_GATEWAY_DOMAIN")
+    ALLOWED_HOSTS = [api_gateway_domain] if api_gateway_domain else ["*"]
 else:
     ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]
 
-CSRF_TRUSTED_ORIGINS = (
-    [f"https://{os.environ.get('API_GATEWAY_DOMAIN')}"]
-    if os.environ.get("API_GATEWAY_DOMAIN")
-    else []
-)
+csrf_trusted_env = os.environ.get("CSRF_TRUSTED_ORIGINS")
+if csrf_trusted_env:
+    CSRF_TRUSTED_ORIGINS = [
+        origin.strip() for origin in csrf_trusted_env.split(",") if origin.strip()
+    ]
+elif os.environ.get("API_GATEWAY_DOMAIN"):
+    CSRF_TRUSTED_ORIGINS = [f"https://{os.environ.get('API_GATEWAY_DOMAIN')}"]
+else:
+    CSRF_TRUSTED_ORIGINS = []
 
 
 # Application definition
@@ -77,6 +85,9 @@ INSTALLED_APPS = [
     "blogs.apps.BlogsConfig",
 ]
 
+if DJANGO_ENV == "local":
+    INSTALLED_APPS.append("debug_toolbar")
+
 # https://docs.djangoproject.com/en/dev/ref/settings/#middleware
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -90,19 +101,22 @@ MIDDLEWARE = [
     "allauth.account.middleware.AccountMiddleware",  # django-allauth
 ]
 
+if DJANGO_ENV == "local":
+    MIDDLEWARE.insert(1, "debug_toolbar.middleware.DebugToolbarMiddleware")
+
 
 # Provider specific settings
-if os.environ.get("AWS_LAMBDA_FUNCTION_NAME"):  # In Lambda
-    ssm = boto3.client("ssm", region_name=os.environ.get("AWS_REGION", "us-east-1"))
+if IS_LAMBDA:  # In Lambda
+    ssm = boto3.client("ssm", region_name=AWS_REGION)
+
+    def get_ssm_param(name: str) -> str:
+        return ssm.get_parameter(Name=name, WithDecryption=True)["Parameter"]["Value"]
+
     SOCIALACCOUNT_PROVIDERS = {
         "google": {
             "APP": {
-                "client_id": ssm.get_parameter(
-                    Name="/yoshiblog/google_client_id", WithDecryption=True
-                )["Parameter"]["Value"],
-                "secret": ssm.get_parameter(
-                    Name="/yoshiblog/google_secret", WithDecryption=True
-                )["Parameter"]["Value"],
+                "client_id": get_ssm_param("/yoshiblog/google_client_id"),
+                "secret": get_ssm_param("/yoshiblog/google_secret"),
                 "key": "",
             },
             "SCOPE": ["profile", "email"],
@@ -110,48 +124,10 @@ if os.environ.get("AWS_LAMBDA_FUNCTION_NAME"):  # In Lambda
         },
         "github": {
             "APP": {
-                "client_id": ssm.get_parameter(
-                    Name="/yoshiblog/github_client_id", WithDecryption=True
-                )["Parameter"]["Value"],
-                "secret": ssm.get_parameter(
-                    Name="/yoshiblog/github_secret", WithDecryption=True
-                )["Parameter"]["Value"],
+                "client_id": get_ssm_param("/yoshiblog/github_client_id"),
+                "secret": get_ssm_param("/yoshiblog/github_secret"),
                 "key": "",
             },
-            "VERIFIED_EMAIL": True,
-        },
-    }
-elif IS_HEROKU_APP:
-    SOCIALACCOUNT_PROVIDERS = {
-        "google": {
-            # For each OAuth based provider, either add a ``SocialApp``
-            # (``socialaccount`` app) containing the required client
-            # credentials, or list them here:
-            "APP": {
-                "client_id": os.environ.get("GOOGLE_CLIENT_ID"),
-                "secret": os.environ.get("GOOGLE_SECRETE"),
-                "key": "",
-            },
-            "SCOPE": [
-                "profile",
-                "email",
-            ],
-            "AUTH_PARAMS": {
-                "access_type": "online",
-            },
-        },
-        "github": {
-            # For each OAuth based provider, either add a ''SocialApp''
-            # (''socialaccount'' app) containing the required client
-            # credentials, or list them here:
-            "APP": {
-                "client_id": os.environ.get("GITHUB_CLIENT_ID"),
-                "secret": os.environ.get("GITHUB_SECRETE"),
-                "key": "",
-            },
-            # For each provider, you can choose whether or not the
-            # email address(es) retrieved from the provider are to be
-            # interpreted as verified.
             "VERIFIED_EMAIL": True,
         },
     }
@@ -162,8 +138,9 @@ else:
             # (``socialaccount`` app) containing the required client
             # credentials, or list them here:
             "APP": {
-                "client_id": config("GOOGLE_CLIENT_ID"),
-                "secret": config("GOOGLE_SECRETE"),
+                "client_id": os.environ.get("GOOGLE_CLIENT_ID")
+                or config("GOOGLE_CLIENT_ID"),
+                "secret": os.environ.get("GOOGLE_SECRETE") or config("GOOGLE_SECRETE"),
                 "key": "",
             }
         },
@@ -172,8 +149,9 @@ else:
             # (''socialaccount'' app) containing the required client
             # credentials, or list them here:
             "APP": {
-                "client_id": config("GITHUB_CLIENT_ID"),
-                "secret": config("GITHUB_SECRETE"),
+                "client_id": os.environ.get("GITHUB_CLIENT_ID")
+                or config("GITHUB_CLIENT_ID"),
+                "secret": os.environ.get("GITHUB_SECRETE") or config("GITHUB_SECRETE"),
                 "key": "",
             },
             # For each provider, you can choose whether or not the
@@ -208,16 +186,57 @@ TEMPLATES = [
 ]
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ.get("DB_NAME"),
-        "USER": os.environ.get("DB_USER"),
-        "PASSWORD": os.environ.get("DB_PASSWORD"),
-        "HOST": os.environ.get("DB_HOST"),
-        "PORT": os.environ.get("DB_PORT", "5432"),
+DSQL_ENDPOINT = os.environ.get("DSQL_ENDPOINT")
+DSQL_CLUSTER_ARN = os.environ.get("DSQL_CLUSTER_ARN")
+DB_NAME = os.environ.get("DB_NAME")
+DB_USER = os.environ.get("DB_USER")
+DB_PASSWORD = os.environ.get("DB_PASSWORD")
+DB_HOST = os.environ.get("DB_HOST")
+DB_PORT = os.environ.get("DB_PORT", "5432")
+
+
+def get_dsql_auth_token(endpoint: str, cluster_arn: str) -> str:
+    client = boto3.client("dsql", region_name=AWS_REGION)
+    if hasattr(client, "generate_db_connect_auth_token"):
+        return client.generate_db_connect_auth_token(
+            Hostname=endpoint,
+            Region=AWS_REGION,
+            ResourceArn=cluster_arn,
+        )
+    if hasattr(client, "generate_db_connect_admin_auth_token"):
+        return client.generate_db_connect_admin_auth_token(
+            Hostname=endpoint,
+            Region=AWS_REGION,
+            ResourceArn=cluster_arn,
+        )
+    raise RuntimeError("DSQL auth token generation is not available in boto3.")
+
+
+if DSQL_ENDPOINT and DSQL_CLUSTER_ARN:
+    if not DB_USER:
+        raise RuntimeError("DB_USER is required when using DSQL.")
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": DB_NAME or "postgres",
+            "USER": DB_USER,
+            "PASSWORD": get_dsql_auth_token(DSQL_ENDPOINT, DSQL_CLUSTER_ARN),
+            "HOST": DSQL_ENDPOINT,
+            "PORT": DB_PORT,
+        }
     }
-}
+    CONN_MAX_AGE = 0
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": DB_NAME,
+            "USER": DB_USER,
+            "PASSWORD": DB_PASSWORD,
+            "HOST": DB_HOST,
+            "PORT": DB_PORT,
+        }
+    }
 
 # For Docker/PostgreSQL usage uncomment this and comment the DATABASES config above
 # DATABASES = {
@@ -274,7 +293,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#static-url
 AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_STORAGE_BUCKET_NAME")
-AWS_S3_REGION_NAME = os.environ.get("AWS_REGION", "us-east-1")
+AWS_S3_REGION_NAME = AWS_REGION
 AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
 STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/static/"
 
@@ -290,6 +309,9 @@ STORAGES = {
         "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
     },
 }
+
+if not AWS_STORAGE_BUCKET_NAME:
+    raise RuntimeError("AWS_STORAGE_BUCKET_NAME is required for static storage.")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field

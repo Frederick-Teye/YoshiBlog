@@ -212,7 +212,14 @@ def get_dsql_auth_token(endpoint: str, cluster_arn: str) -> str:
     raise RuntimeError("DSQL auth token generation is not available in boto3.")
 
 
-if DSQL_ENDPOINT and DSQL_CLUSTER_ARN:
+if DJANGO_ENV == "local":
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
+elif DSQL_ENDPOINT and DSQL_CLUSTER_ARN:
     if not DB_USER:
         raise RuntimeError("DB_USER is required when using DSQL.")
     DATABASES = {
@@ -294,7 +301,9 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 # https://docs.djangoproject.com/en/dev/ref/settings/#static-url
 AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_STORAGE_BUCKET_NAME")
 AWS_S3_REGION_NAME = AWS_REGION
-AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
+AWS_S3_CUSTOM_DOMAIN = (
+    f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com" if AWS_STORAGE_BUCKET_NAME else None
+)
 STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/static/"
 
 # https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS

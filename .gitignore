@@ -20,3 +20,6 @@ media
 
 # AWS SAM build artifacts
 .aws-sam/
+
+# Local ops notes
+ops/dsql-lambda-debugging.md

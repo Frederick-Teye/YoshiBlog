@@ -9,6 +9,7 @@ class DatabaseWrapper(PgWrapper):
         host = params.get("host", "") or ""
 
         if "dsql" in host and host.endswith(".on.aws"):
+            params["sslmode"] = "require"
             region = os.environ.get("AWS_REGION", "us-east-1")
             parts = host.split(".")
             if len(parts) >= 3:

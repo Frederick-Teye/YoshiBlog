@@ -8,6 +8,7 @@ from django.template.response import TemplateResponse
 from django.utils.text import slugify
 from .forms import CommentForm, BlogForm
 from .models import Blog, Comment
+from .dsql_utils import dsql_retry
 
 logger = logging.getLogger(__name__)
 
@@ -56,6 +57,7 @@ def blog_detail_view(request, pk, blog_slug):
 
 
 @login_required
+@dsql_retry()
 def blog_create_view(request):
     if request.method == "POST":
         form = BlogForm(request.POST)
@@ -90,6 +92,7 @@ def blog_create_view(request):
 
 
 @login_required
+@dsql_retry()
 def blog_update_view(request, pk):
     blog = get_object_or_404(Blog.objects.all(), pk=pk)
     if request.method == "POST":
@@ -114,6 +117,7 @@ def blog_update_view(request, pk):
 
 
 @login_required
+@dsql_retry()
 def blog_delete_view(request, pk):
     blog = get_object_or_404(Blog.objects.all(), pk=pk)
     blog.delete()
@@ -121,6 +125,7 @@ def blog_delete_view(request, pk):
 
 
 @login_required
+@dsql_retry()
 def blog_like_view(request, pk):
     if request.path_info == "/blogs/" + str(pk) + "/like/":
         blog = get_object_or_404(Blog.objects.all(), id=request.POST.get("blog_id"))
@@ -156,6 +161,7 @@ def blog_like_view(request, pk):
 
 
 @login_required
+@dsql_retry()
 def comment_delete_view(request, pk, blog_slug, comment_pk):
     blog = get_object_or_404(Blog.objects.all(), pk=pk)
     check_and_log_wrong_slug(request, blog, blog_slug)
@@ -165,6 +171,7 @@ def comment_delete_view(request, pk, blog_slug, comment_pk):
 
 
 @login_required
+@dsql_retry()
 def comment_update_view(request, pk, blog_slug, comment_pk):
     blog = get_object_or_404(Blog.objects.all(), pk=pk)
     check_and_log_wrong_slug(request, blog, blog_slug)
@@ -186,6 +193,7 @@ def comment_update_view(request, pk, blog_slug, comment_pk):
 
 
 @login_required
+@dsql_retry()
 def comment_create_view(
     request, pk, blog_slug
 ):  # pk is the pk of the blog which comment belong to
@@ -206,6 +214,7 @@ def comment_create_view(
 
 
 @login_required
+@dsql_retry()
 def comment_like_view(request, pk, blog_slug, comment_pk):
     blog = get_object_or_404(Blog.objects.all(), pk=pk)
     check_and_log_wrong_slug(request, blog, blog_slug)

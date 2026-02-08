@@ -66,7 +66,6 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
-    "whitenoise.runserver_nostatic",
     "django.contrib.staticfiles",
     "django.contrib.sites",
     # Third-party
@@ -91,7 +90,6 @@ if DJANGO_ENV == "local":
 # https://docs.djangoproject.com/en/dev/ref/settings/#middleware
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",  # WhiteNoise
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -187,29 +185,11 @@ TEMPLATES = [
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DSQL_ENDPOINT = os.environ.get("DSQL_ENDPOINT")
-DSQL_CLUSTER_ARN = os.environ.get("DSQL_CLUSTER_ARN")
 DB_NAME = os.environ.get("DB_NAME")
 DB_USER = os.environ.get("DB_USER")
 DB_PASSWORD = os.environ.get("DB_PASSWORD")
 DB_HOST = os.environ.get("DB_HOST")
 DB_PORT = os.environ.get("DB_PORT", "5432")
-
-
-def get_dsql_auth_token(endpoint: str, cluster_arn: str) -> str:
-    client = boto3.client("dsql", region_name=AWS_REGION)
-    if hasattr(client, "generate_db_connect_auth_token"):
-        return client.generate_db_connect_auth_token(
-            Hostname=endpoint,
-            Region=AWS_REGION,
-            ResourceArn=cluster_arn,
-        )
-    if hasattr(client, "generate_db_connect_admin_auth_token"):
-        return client.generate_db_connect_admin_auth_token(
-            Hostname=endpoint,
-            Region=AWS_REGION,
-            ResourceArn=cluster_arn,
-        )
-    raise RuntimeError("DSQL auth token generation is not available in boto3.")
 
 
 if DJANGO_ENV == "local":
@@ -219,15 +199,15 @@ if DJANGO_ENV == "local":
             "NAME": BASE_DIR / "db.sqlite3",
         }
     }
-elif DSQL_ENDPOINT and DSQL_CLUSTER_ARN:
+elif DSQL_ENDPOINT:
     if not DB_USER:
         raise RuntimeError("DB_USER is required when using DSQL.")
     DATABASES = {
         "default": {
-            "ENGINE": "django.db.backends.postgresql",
+            "ENGINE": "django_project.dsql_db",
             "NAME": DB_NAME or "postgres",
             "USER": DB_USER,
-            "PASSWORD": get_dsql_auth_token(DSQL_ENDPOINT, DSQL_CLUSTER_ARN),
+            "PASSWORD": "",
             "HOST": DSQL_ENDPOINT,
             "PORT": DB_PORT,
         }

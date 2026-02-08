@@ -318,10 +318,41 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "smtp.gmail.com")
+EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "587"))
+EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS", "true").lower() == "true"
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+
+if IS_LAMBDA:
+    ssm = boto3.client("ssm", region_name=AWS_REGION)
+
+    def get_ssm_email_param(name: str) -> str | None:
+        try:
+            return ssm.get_parameter(Name=name, WithDecryption=True)["Parameter"][
+                "Value"
+            ]
+        except Exception:
+            return None
+
+    EMAIL_HOST = get_ssm_email_param("/yoshiblog/email_host") or EMAIL_HOST
+    EMAIL_HOST_USER = (
+        get_ssm_email_param("/yoshiblog/email_host_user") or EMAIL_HOST_USER
+    )
+    EMAIL_HOST_PASSWORD = (
+        get_ssm_email_param("/yoshiblog/email_host_password") or EMAIL_HOST_PASSWORD
+    )
+    DEFAULT_FROM_EMAIL = get_ssm_email_param("/yoshiblog/default_from_email") or None
+
+if EMAIL_HOST_USER and EMAIL_HOST_PASSWORD:
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+else:
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#default-from-email
-DEFAULT_FROM_EMAIL = "root@localhost"
+DEFAULT_FROM_EMAIL = DEFAULT_FROM_EMAIL or os.environ.get(
+    "DEFAULT_FROM_EMAIL", "root@localhost"
+)
 
 # django-debug-toolbar
 # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html

@@ -6,6 +6,15 @@ Parameters:
   SecretKey:
     Type: String
     NoEcho: true
+  EmailHost:
+    Type: String
+    Default: smtp.gmail.com
+  EmailHostUser:
+    Type: String
+    Default: jay09peterson@gmail.com
+  DefaultFromEmail:
+    Type: String
+    Default: jay09peterson@gmail.com
 
 Globals:
   Function:
@@ -42,6 +51,9 @@ Resources:
           DSQL_CLUSTER_ARN: !GetAtt DSQLCluster.ResourceArn
           AWS_STORAGE_BUCKET_NAME: !Ref S3Bucket
           SECRET_KEY: !Ref SecretKey
+          EMAIL_HOST: !Ref EmailHost
+          EMAIL_HOST_USER: !Ref EmailHostUser
+          DEFAULT_FROM_EMAIL: !Ref DefaultFromEmail
 
     Metadata:
       DockerTag: latest

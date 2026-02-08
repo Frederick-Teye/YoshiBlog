@@ -191,6 +191,12 @@ DB_PASSWORD = os.environ.get("DB_PASSWORD")
 DB_HOST = os.environ.get("DB_HOST")
 DB_PORT = os.environ.get("DB_PORT", "5432")
 
+if IS_LAMBDA and not DB_USER:
+    ssm = boto3.client("ssm", region_name=AWS_REGION)
+    DB_USER = ssm.get_parameter(Name="/yoshiblog/db_user", WithDecryption=True)[
+        "Parameter"
+    ]["Value"]
+
 
 if DJANGO_ENV == "local":
     DATABASES = {

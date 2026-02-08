@@ -3,12 +3,18 @@ FROM python:3.11-slim
 ENV PYTHONUNBUFFERED=1
 WORKDIR /app
 
+COPY --from=public.ecr.aws/awsguru/aws-lambda-adapter:0.8.4 /lambda-adapter /opt/extensions/lambda-adapter
+
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 ARG COLLECTSTATIC=0
 RUN if [ "$COLLECTSTATIC" = "1" ]; then python manage.py collectstatic --noinput; fi
+
+ENV AWS_LWA_PORT=8000
+ENV AWS_LWA_READINESS_CHECK_PATH=/
+ENV AWS_LWA_ASYNC_INIT=true
 
 EXPOSE 8000
 CMD ["gunicorn", "django_project.wsgi:application", "--bind", "0.0.0.0:8000"]

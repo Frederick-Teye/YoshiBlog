@@ -3,9 +3,6 @@ Transform: AWS::Serverless-2016-10-31
 Description: YoshiBlog Django App
 
 Parameters:
-  SecretKey:
-    Type: String
-    NoEcho: true
   EmailHost:
     Type: String
     Default: smtp.gmail.com
@@ -31,7 +28,6 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       PackageType: Image
-      ImageUri: public.ecr.aws/n1d6x8l4/yoshiblog-repo:latest
       Events:
         ApiEvent:
           Type: HttpApi
@@ -45,12 +41,20 @@ Resources:
               Action:
                 - dsql:DbConnect
               Resource: !GetAtt DSQLCluster.ResourceArn
+            - Effect: Allow
+              Action:
+                - ssm:GetParameter
+              Resource: !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/yoshiblog/*
+            - Effect: Allow
+              Action:
+                - kms:Decrypt
+              Resource: !Sub arn:aws:kms:${AWS::Region}:${AWS::AccountId}:alias/aws/ssm
       Environment:
         Variables:
+          DJANGO_ENV: lambda
           DSQL_ENDPOINT: !GetAtt DSQLCluster.Endpoint
           DSQL_CLUSTER_ARN: !GetAtt DSQLCluster.ResourceArn
           AWS_STORAGE_BUCKET_NAME: !Ref S3Bucket
-          SECRET_KEY: !Ref SecretKey
           EMAIL_HOST: !Ref EmailHost
           EMAIL_HOST_USER: !Ref EmailHostUser
           DEFAULT_FROM_EMAIL: !Ref DefaultFromEmail
@@ -63,12 +67,7 @@ Resources:
   S3Bucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: yoshiblog-static-files
-
-  DjangoImage:
-    Type: AWS::ECR::PublicRepository
-    Properties:
-      RepositoryName: yoshiblog-repo
+      BucketName: !Sub "yoshiblog-static-files-${AWS::AccountId}"
 
   DSQLCluster:
     Type: AWS::DSQL::Cluster

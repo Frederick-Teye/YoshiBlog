@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
-Description: YoshiBlog Django App
+Description: YoshiBlog Django App (Secure Neon DB)
 
 Parameters:
   EmailHost:
@@ -39,10 +39,6 @@ Resources:
         - Statement:
             - Effect: Allow
               Action:
-                - dsql:DbConnect
-              Resource: !GetAtt DSQLCluster.ResourceArn
-            - Effect: Allow
-              Action:
                 - ssm:GetParameter
               Resource: !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/yoshiblog/*
             - Effect: Allow
@@ -52,8 +48,6 @@ Resources:
       Environment:
         Variables:
           DJANGO_ENV: lambda
-          DSQL_ENDPOINT: !GetAtt DSQLCluster.Endpoint
-          DSQL_CLUSTER_ARN: !GetAtt DSQLCluster.ResourceArn
           AWS_STORAGE_BUCKET_NAME: !Ref S3Bucket
           EMAIL_HOST: !Ref EmailHost
           EMAIL_HOST_USER: !Ref EmailHostUser
@@ -69,15 +63,7 @@ Resources:
     Properties:
       BucketName: !Sub "yoshiblog-static-files-${AWS::AccountId}"
 
-  DSQLCluster:
-    Type: AWS::DSQL::Cluster
-    Properties:
-      DeletionProtectionEnabled: false
-
 Outputs:
   ApiUrl:
     Description: API Gateway endpoint URL
     Value: !Sub https://${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com/
-  DsqlEndpoint:
-    Description: Aurora DSQL endpoint
-    Value: !GetAtt DSQLCluster.Endpoint

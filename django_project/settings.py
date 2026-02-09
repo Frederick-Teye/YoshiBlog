@@ -4,38 +4,37 @@ from decouple import config
 import logging.config
 from django.utils.log import DEFAULT_LOGGING
 from pathlib import Path
+import dj_database_url
 
 DJANGO_ENV = os.environ.get("DJANGO_ENV", "local").lower()
 IS_LAMBDA = bool(os.environ.get("AWS_LAMBDA_FUNCTION_NAME"))
 IS_PROD = DJANGO_ENV in {"prod", "production", "lambda"} or IS_LAMBDA
 
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/dev/howto/deployment/checklist/
-
-# https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
-# SECURITY WARNING: keep the secret key used in production secret!
+# Security
 AWS_REGION = os.environ.get("AWS_REGION", "us-east-1")
 
-if IS_LAMBDA:  # In Lambda
+SECRET_KEY = None
+
+if IS_LAMBDA:
     ssm = boto3.client("ssm", region_name=AWS_REGION)
-    SECRET_KEY = ssm.get_parameter(Name="/yoshiblog/secret_key", WithDecryption=True)[
-        "Parameter"
-    ]["Value"]
+    try:
+        SECRET_KEY = ssm.get_parameter(
+            Name="/yoshiblog/secret_key", WithDecryption=True
+        )["Parameter"]["Value"]
+    except Exception:
+        # Fallback for build/test phases if SSM isn't accessible
+        SECRET_KEY = os.environ.get("SECRET_KEY") or config("SECRET_KEY")
+
 else:
-    SECRET_KEY = os.environ.get("SECRET_KEY") or config("SECRET_KEY")
+    SECRET_KEY = os.environ.get("SECRET_KEY") or config(
+        "SECRET_KEY", default="django-insecure-key"
+    )
 
-
-# https://docs.djangoproject.com/en/dev/ref/settings/#debug
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = not IS_PROD
 
-
-# https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
 allowed_hosts_env = os.environ.get("ALLOWED_HOSTS")
 if allowed_hosts_env:
     ALLOWED_HOSTS = [
@@ -57,9 +56,7 @@ elif os.environ.get("API_GATEWAY_DOMAIN"):
 else:
     CSRF_TRUSTED_ORIGINS = []
 
-
 # Application definition
-# https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -87,7 +84,6 @@ INSTALLED_APPS = [
 if DJANGO_ENV == "local":
     INSTALLED_APPS.append("debug_toolbar")
 
-# https://docs.djangoproject.com/en/dev/ref/settings/#middleware
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -96,19 +92,23 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "allauth.account.middleware.AccountMiddleware",  # django-allauth
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 if DJANGO_ENV == "local":
     MIDDLEWARE.insert(1, "debug_toolbar.middleware.DebugToolbarMiddleware")
 
-
-# Provider specific settings
-if IS_LAMBDA:  # In Lambda
+# Authentication Providers
+if IS_LAMBDA:
     ssm = boto3.client("ssm", region_name=AWS_REGION)
 
     def get_ssm_param(name: str) -> str:
-        return ssm.get_parameter(Name=name, WithDecryption=True)["Parameter"]["Value"]
+        try:
+            return ssm.get_parameter(Name=name, WithDecryption=True)["Parameter"][
+                "Value"
+            ]
+        except Exception:
+            return ""
 
     SOCIALACCOUNT_PROVIDERS = {
         "google": {
@@ -132,41 +132,25 @@ if IS_LAMBDA:  # In Lambda
 else:
     SOCIALACCOUNT_PROVIDERS = {
         "google": {
-            # For each OAuth based provider, either add a ``SocialApp``
-            # (``socialaccount`` app) containing the required client
-            # credentials, or list them here:
             "APP": {
-                "client_id": os.environ.get("GOOGLE_CLIENT_ID")
-                or config("GOOGLE_CLIENT_ID"),
-                "secret": os.environ.get("GOOGLE_SECRETE") or config("GOOGLE_SECRETE"),
+                "client_id": config("GOOGLE_CLIENT_ID", default=""),
+                "secret": config("GOOGLE_SECRETE", default=""),
                 "key": "",
             }
         },
         "github": {
-            # For each OAuth based provider, either add a ''SocialApp''
-            # (''socialaccount'' app) containing the required client
-            # credentials, or list them here:
             "APP": {
-                "client_id": os.environ.get("GITHUB_CLIENT_ID")
-                or config("GITHUB_CLIENT_ID"),
-                "secret": os.environ.get("GITHUB_SECRETE") or config("GITHUB_SECRETE"),
+                "client_id": config("GITHUB_CLIENT_ID", default=""),
+                "secret": config("GITHUB_SECRETE", default=""),
                 "key": "",
             },
-            # For each provider, you can choose whether or not the
-            # email address(es) retrieved from the provider are to be
-            # interpreted as verified.
             "VERIFIED_EMAIL": True,
         },
     }
 
-
-# https://docs.djangoproject.com/en/dev/ref/settings/#root-urlconf
 ROOT_URLCONF = "django_project.urls"
-
-# https://docs.djangoproject.com/en/dev/ref/settings/#wsgi-application
 WSGI_APPLICATION = "django_project.wsgi.application"
 
-# https://docs.djangoproject.com/en/dev/ref/settings/#templates
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -183,212 +167,124 @@ TEMPLATES = [
     },
 ]
 
-# https://docs.djangoproject.com/en/dev/ref/settings/#databases
-DSQL_ENDPOINT = os.environ.get("DSQL_ENDPOINT")
-DB_NAME = os.environ.get("DB_NAME")
-DB_USER = os.environ.get("DB_USER")
-DB_PASSWORD = os.environ.get("DB_PASSWORD")
-DB_HOST = os.environ.get("DB_HOST")
-DB_PORT = os.environ.get("DB_PORT", "5432")
-
-if IS_LAMBDA and not DB_USER:
-    ssm = boto3.client("ssm", region_name=AWS_REGION)
-    DB_USER = ssm.get_parameter(Name="/yoshiblog/db_user", WithDecryption=True)[
-        "Parameter"
-    ]["Value"]
-
-
-if DJANGO_ENV == "local":
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
-        }
-    }
-elif DSQL_ENDPOINT:
-    if not DB_USER:
-        raise RuntimeError("DB_USER is required when using DSQL.")
-    DATABASES = {
-        "default": {
-            "ENGINE": "django_project.dsql_db",
-            "NAME": DB_NAME or "postgres",
-            "USER": DB_USER,
-            "PASSWORD": "",
-            "HOST": DSQL_ENDPOINT,
-            "PORT": DB_PORT,
-        }
-    }
-    CONN_MAX_AGE = 0
-else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": DB_NAME,
-            "USER": DB_USER,
-            "PASSWORD": DB_PASSWORD,
-            "HOST": DB_HOST,
-            "PORT": DB_PORT,
-        }
-    }
-
-# For Docker/PostgreSQL usage uncomment this and comment the DATABASES config above
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": "postgres",
-#         "USER": "postgres",
-#         "PASSWORD": "postgres",
-#         "HOST": "db",  # set in docker-compose.yml
-#         "PORT": 5432,  # default postgres port
-#     }
-# }
-
-# Password validation
-# https://docs.djangoproject.com/en/dev/ref/settings/#auth-password-validators
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
-    },
-]
-
-
-# Internationalization
-# https://docs.djangoproject.com/en/dev/topics/i18n/
-# https://docs.djangoproject.com/en/dev/ref/settings/#language-code
-LANGUAGE_CODE = "en-us"
-
-# https://docs.djangoproject.com/en/dev/ref/settings/#time-zone
-TIME_ZONE = "UTC"
-
-# https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-USE_I18N
-USE_I18N = True
-
-# https://docs.djangoproject.com/en/dev/ref/settings/#use-tz
-USE_TZ = True
-
-# https://docs.djangoproject.com/en/dev/ref/settings/#locale-paths
-LOCALE_PATHS = [BASE_DIR / "locale"]
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.0/howto/static-files/
-
-# https://docs.djangoproject.com/en/dev/ref/settings/#static-root
-STATIC_ROOT = BASE_DIR / "staticfiles"
-
-# https://docs.djangoproject.com/en/dev/ref/settings/#static-url
-AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_STORAGE_BUCKET_NAME") or config(
-    "AWS_STORAGE_BUCKET_NAME"
-)
-AWS_S3_REGION_NAME = AWS_REGION
-AWS_S3_CUSTOM_DOMAIN = (
-    f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com" if AWS_STORAGE_BUCKET_NAME else None
-)
-STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/"
-AWS_QUERYSTRING_AUTH = False
-AWS_S3_OBJECT_PARAMETERS = {
-    "CacheControl": "max-age=31536000, immutable",
-}
-
-# https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS
-STATICFILES_DIRS = [BASE_DIR / "static"]
-
-# https://whitenoise.readthedocs.io/en/latest/django.html
-STORAGES = {
-    "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
-    },
-    "staticfiles": {
-        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
-    },
-}
-
-if not AWS_STORAGE_BUCKET_NAME:
-    raise RuntimeError("AWS_STORAGE_BUCKET_NAME is required for static storage.")
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-# django-crispy-forms
-# https://django-crispy-forms.readthedocs.io/en/latest/install.html#template-packs
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
-CRISPY_TEMPLATE_PACK = "bootstrap5"
-
-# https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
-EMAIL_HOST = os.environ.get("EMAIL_HOST", "smtp.gmail.com")
-EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "587"))
-EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS", "true").lower() == "true"
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+# --- DATABASE CONFIGURATION ---
+DATABASE_URL = None
 
 if IS_LAMBDA:
     ssm = boto3.client("ssm", region_name=AWS_REGION)
-
-    def get_ssm_email_param(name: str) -> str | None:
-        try:
-            return ssm.get_parameter(Name=name, WithDecryption=True)["Parameter"][
-                "Value"
-            ]
-        except Exception:
-            return None
-
-    EMAIL_HOST = get_ssm_email_param("/yoshiblog/email_host") or EMAIL_HOST
-    EMAIL_HOST_USER = (
-        get_ssm_email_param("/yoshiblog/email_host_user") or EMAIL_HOST_USER
-    )
-    EMAIL_HOST_PASSWORD = (
-        get_ssm_email_param("/yoshiblog/email_host_password") or EMAIL_HOST_PASSWORD
-    )
-    DEFAULT_FROM_EMAIL = get_ssm_email_param("/yoshiblog/default_from_email") or None
-
-if EMAIL_HOST_USER and EMAIL_HOST_PASSWORD:
-    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    try:
+        # Fetch the SecureString from SSM
+        DATABASE_URL = ssm.get_parameter(
+            Name="/yoshiblog/database_url", WithDecryption=True
+        )["Parameter"]["Value"]
+    except Exception as e:
+        print(f"Error fetching DATABASE_URL from SSM: {e}")
+        DATABASE_URL = None
 else:
-    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+    # Local development uses .env or environment variable
+    DATABASE_URL = os.environ.get("DATABASE_URL") or config(
+        "DATABASE_URL", default=None
+    )
 
-# https://docs.djangoproject.com/en/dev/ref/settings/#default-from-email
-DEFAULT_FROM_EMAIL = DEFAULT_FROM_EMAIL or os.environ.get(
-    "DEFAULT_FROM_EMAIL", "root@localhost"
+DATABASES = {
+    "default": dj_database_url.config(
+        default=DATABASE_URL or f"sqlite:///{BASE_DIR}/db.sqlite3",
+        conn_max_age=600,
+        ssl_require=True if DATABASE_URL and "sqlite" not in DATABASE_URL else False,
+    )
+}
+
+# Password validation
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"
+    },
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
+]
+
+# Internationalization
+LANGUAGE_CODE = "en-us"
+TIME_ZONE = "UTC"
+USE_I18N = True
+USE_TZ = True
+LOCALE_PATHS = [BASE_DIR / "locale"]
+
+# Static files (S3)
+AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_STORAGE_BUCKET_NAME") or config(
+    "AWS_STORAGE_BUCKET_NAME", default=None
 )
+AWS_S3_REGION_NAME = AWS_REGION
 
-# django-debug-toolbar
-# https://django-debug-toolbar.readthedocs.io/en/latest/installation.html
-# https://docs.djangoproject.com/en/dev/ref/settings/#internal-ips
-INTERNAL_IPS = ["127.0.0.1", "::1"]
-
-if DJANGO_ENV == "local":
-    DEBUG_TOOLBAR_CONFIG = {
-        "SHOW_TOOLBAR_CALLBACK": lambda request: True,
+if AWS_STORAGE_BUCKET_NAME:
+    AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
+    STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/"
+    STORAGES = {
+        "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+        "staticfiles": {"BACKEND": "storages.backends.s3boto3.S3Boto3Storage"},
+    }
+else:
+    STATIC_URL = "/static/"
+    STATIC_ROOT = BASE_DIR / "staticfiles"
+    STORAGES = {
+        "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+        "staticfiles": {
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"
+        },
     }
 
-# https://docs.djangoproject.com/en/dev/topics/auth/customizing/#substituting-a-custom-user-model
+AWS_QUERYSTRING_AUTH = False
+AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=31536000, immutable"}
+STATICFILES_DIRS = [BASE_DIR / "static"]
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Crispy Forms
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+# Email
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "smtp.gmail.com")
+EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "587"))
+EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS", "true").lower() == "true"
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL") or config(
+    "DEFAULT_FROM_EMAIL", default="root@localhost"
+)
+
+if IS_LAMBDA:
+    # Attempt to fetch email credentials from SSM if in Lambda
+    try:
+        EMAIL_HOST = get_ssm_param("/yoshiblog/email_host") or EMAIL_HOST
+        EMAIL_HOST_USER = get_ssm_param("/yoshiblog/email_host_user") or EMAIL_HOST_USER
+        EMAIL_HOST_PASSWORD = (
+            get_ssm_param("/yoshiblog/email_host_password") or EMAIL_HOST_PASSWORD
+        )
+    except Exception:
+        pass
+
+EMAIL_BACKEND = (
+    "django.core.mail.backends.smtp.EmailBackend"
+    if EMAIL_HOST_USER
+    else "django.core.mail.backends.console.EmailBackend"
+)
+
+# Django Debug Toolbar
+INTERNAL_IPS = ["127.0.0.1", "::1"]
+if DJANGO_ENV == "local":
+    DEBUG_TOOLBAR_CONFIG = {"SHOW_TOOLBAR_CALLBACK": lambda request: True}
+
+# Auth / AllAuth
 AUTH_USER_MODEL = "accounts.CustomUser"
-
-# django-allauth config
-# https://docs.djangoproject.com/en/dev/ref/settings/#site-id
 SITE_ID = 1
-
-# https://docs.djangoproject.com/en/dev/ref/settings/#login-redirect-url
 LOGIN_REDIRECT_URL = "home"
-
-# https://django-allauth.readthedocs.io/en/latest/views.html#logout-account-logout
 ACCOUNT_LOGOUT_REDIRECT_URL = "home"
-
-# https://django-allauth.readthedocs.io/en/latest/installation.html?highlight=backends
 AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
 )
-# https://django-allauth.readthedocs.io/en/latest/configuration.html
 ACCOUNT_SESSION_REMEMBER = True
 ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
 ACCOUNT_USERNAME_REQUIRED = False
@@ -396,52 +292,31 @@ ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 
-
-# LOG CONFIGURATION
-
-# Disable Django's logging setup
+# Logging
 LOGGING_CONFIG = None
-
 LOGLEVEL = os.environ.get("LOGLEVEL", "INFO")
-
 logging.config.dictConfig(
     {
         "version": 1,
         "disable_existing_loggers": False,
         "formatters": {
             "default": {
-                # exact format is not important, this is the minimum information
-                "format": "%(asctime)s %(name)-12s %(levelname)-8s %(message)s",
+                "format": "%(asctime)s %(name)-12s %(levelname)-8s %(message)s"
             },
-            "django.server": DEFAULT_LOGGING["formatters"]["django.server"],
         },
         "handlers": {
-            # console logs to stderr
-            "console": {
-                "class": "logging.StreamHandler",
-                "formatter": "default",
-            },
-            "django.server": DEFAULT_LOGGING["handlers"]["django.server"],
+            "console": {"class": "logging.StreamHandler", "formatter": "default"},
         },
         "loggers": {
-            # default for all undefined Python modules
-            "": {
-                "level": "WARNING",
+            "": {"level": "WARNING", "handlers": ["console"]},
+            "app": {"level": LOGLEVEL, "handlers": ["console"], "propagate": False},
+            "django.server": {
+                "level": "INFO",
                 "handlers": ["console"],
-            },
-            # Our application code
-            "app": {
-                "level": LOGLEVEL,
-                "handlers": ["console"],
-                # Avoid double logging because of root logger
                 "propagate": False,
             },
-            # Default runserver request logging
-            "django.server": DEFAULT_LOGGING["loggers"]["django.server"],
         },
     }
 )
 
-
-# https://django-taggit.readthedocs.io/en/latest/getting_started.html
 TAGGIT_CASE_INSENSITIVE = True

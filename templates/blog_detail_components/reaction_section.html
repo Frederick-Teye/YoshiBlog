@@ -1,61 +1,75 @@
 {% load custom_tags %}
 
 <div class="row d-flex justify-content-center" id="grid-container">
-    <hr>
-    <div class="col-xs-2 col-sm-2 item-a like-btn" id="detail-view-like" data-id="{{ blog.id }}" data-csrf-token="{{ csrf_token }}" data-href="{% url 'blog_like' blog.id %}">
-        <div>
-            {% user_likes_blog blog.pk as user_likes %}
-            {% if user_likes %}
+  <hr />
+  <div
+    class="col-xs-2 col-sm-2 item-a like-btn"
+    id="detail-view-like"
+    data-id="{{ blog.id }}"
+    data-csrf-token="{{ csrf_token }}"
+    data-href="{% url 'blog_like' blog.id %}"
+  >
+    <div>
+      {% user_likes_blog blog.pk as user_likes %} {% if user_likes %}
 
-            <button type="button" class="btn btn-link text-decoration-none position-relative" style="color:  rgb(62, 177, 244);">
+      <button
+        type="button"
+        class="btn btn-link text-decoration-none position-relative"
+        style="color: rgb(62, 177, 244)"
+      >
+        <i class="bi bi-hand-thumbs-up-fill me-2" style="font-size: 1.2em"></i>
+        <span class="icon-label"> Unlike</span>
 
-                <i class="bi bi-hand-thumbs-up-fill me-2" style="font-size: 1.2em;"></i>
-                <span class="icon-label"> Unlike</span>
+        {% if total_likes %}
+        <span
+          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+        >
+          {{ total_likes }}
+        </span>
+        {% endif %}
+      </button>
 
-                {% if total_likes %}
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        {{ total_likes }}
-                    </span>
-                {% endif %}
+      {% else %}
 
-            </button>
+      <button
+        type="button"
+        class="btn btn-link text-decoration-none position-relative"
+        style="color: black"
+      >
+        <i class="bi bi-hand-thumbs-up me-2" style="font-size: 1.2em"></i>
+        <span class="icon-label"> Like</span>
 
-            {% else %}
+        {% if total_likes %}
+        <span
+          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+        >
+          {{ total_likes }}
+        </span>
+        {% endif %}
+      </button>
 
-            <button type="button" class="btn btn-link text-decoration-none position-relative" style="color: black;">
-                <i class="bi bi-hand-thumbs-up me-2" style="font-size: 1.2em;"></i>
-                <span class="icon-label"> Like</span>
-
-                {% if total_likes %}
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        {{ total_likes }}
-                    </span>
-                {% endif %}
-            </button>
-
-            {% endif %}
-        </div>
+      {% endif %}
     </div>
-    <div class="col-xs-6 col-sm-8 row d-flex justify-content-center item-b">
-        <div class="col-sm-10 align-self-center">
-            {% if did_user_comment %}
-            {% if total_comments_minus_1 > 1 %}
-            You and {{ total_comments_minus_1 }} others {{ total_comments_minus_1|pluralize}} comment
-            {% endif %}
-            {% else %}
-            {% if total_comments > 0 %}
-            {{ total_comments }} Others {{ total_comments|pluralize }} comment
-            {% else %}
-            There are no comments
-            {% endif %}
-            {% endif %}
-        </div>
+  </div>
+  <div class="col-xs-6 col-sm-8 row d-flex justify-content-center item-b">
+    <div class="col-sm-10 align-self-center">
+      {% if did_user_comment %} {% if total_comments_minus_1 > 1 %} You and {{
+      total_comments_minus_1 }} others {{ total_comments_minus_1|pluralize}}
+      comment {% endif %} {% else %} {% if total_comments > 0 %} {{
+      total_comments }} Others {{ total_comments|pluralize }} comment {% else %}
+      There are no comments {% endif %} {% endif %}
     </div>
-    <div class="col-xs-2 col-sm-2 item-c share-btn">
-        <a href="" class="text-decoration-none" style="color: black;">
-            <i class="bi bi-send me-2" style="font-size: 1.2em;"></i>
-            <span class="icon-label"> Share</span>
-        </a>
-    </div>
-    <hr>
+  </div>
+  <div class="col-xs-2 col-sm-2 item-c share-btn">
+    <a
+      href=""
+      class="text-decoration-none"
+      style="color: black"
+      onclick="shareBlogPost('{{ blog.title }}', '{{ request.build_absolute_uri }}'); event.preventDefault();"
+    >
+      <i class="bi bi-send me-2" style="font-size: 1.2em"></i>
+      <span class="icon-label"> Share</span>
+    </a>
+  </div>
+  <hr />
 </div>

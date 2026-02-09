@@ -48,7 +48,7 @@
         </div>
     </div>
     <div class="col-xs-2 col-sm-2 item-c share-btn">
-        <a href="" class="text-decoration-none" style="color: black;">
+        <a href="" class="text-decoration-none" style="color: black;" onclick="shareBlogPost('{{ blog.title }}', '{{ request.build_absolute_uri|slice:": -1" }}{% url "blog_detail" blog.pk blog.slug %}'); event.preventDefault();">
             <i class="bi bi-send me-2" style="font-size: 1.2em;"></i>
             <span class="icon-label"> Share</span>
         </a>

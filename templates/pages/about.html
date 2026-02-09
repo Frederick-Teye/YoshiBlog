@@ -1,7 +1,103 @@
-{% extends '_base.html' %}
-
-{% block title %}About page{% endblock %}
-
+{% extends '_base.html' %} {% block title %}About YoshiBlog{% endblock %} 
 {% block content %}
-<h1>About page</h1>
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <h1 class="display-4 text-center mb-4">About YoshiBlog</h1>
+
+      <p class="lead text-center mb-5">
+        Welcome to <strong>YoshiBlog</strong>, a modern, feature-rich blogging
+        platform built with Django. Whether you're a developer sharing technical
+        insights, a writer documenting your journey, or a community builder
+        fostering discussions, YoshiBlog provides the tools you need to create
+        engaging content and connect with your audience.
+      </p>
+
+      <h2 class="h3 mb-4">Key Features</h2>
+      <ul class="list-group list-group-flush mb-5">
+        <li class="list-group-item">
+          <strong>Rich Text Blogging:</strong> Create and edit posts with
+          support for markdown, code syntax highlighting, and embedded media
+        </li>
+        <li class="list-group-item">
+          <strong>Interactive Comments:</strong> Engage readers with threaded
+          comments, like/unlike functionality, and real-time updates
+        </li>
+        <li class="list-group-item">
+          <strong>Social Sharing:</strong> Easily share your posts across
+          platforms with built-in sharing buttons
+        </li>
+        <li class="list-group-item">
+          <strong>User Authentication:</strong> Secure login/signup with social
+          account integration (GitHub, Google)
+        </li>
+        <li class="list-group-item">
+          <strong>Responsive Design:</strong> Optimized for all devices -
+          desktop, tablet, and mobile
+        </li>
+        <li class="list-group-item">
+          <strong>Tag System:</strong> Organize content with customizable tags
+          for better discoverability
+        </li>
+        <li class="list-group-item">
+          <strong>Like System:</strong> Allow readers to show appreciation for
+          posts and comments
+        </li>
+        <li class="list-group-item">
+          <strong>Email Notifications:</strong> Stay connected with password
+          reset and account management features
+        </li>
+      </ul>
+
+      <h2 class="h3 mb-4">Our Mission</h2>
+      <p class="mb-4">
+        YoshiBlog is designed to make blogging accessible and enjoyable. We
+        believe in the power of shared knowledge and community-driven content.
+        Our platform combines simplicity with powerful features to help creators
+        focus on what matters most - their stories and ideas.
+      </p>
+
+      <h2 class="h3 mb-4">Technology Stack</h2>
+      <div class="row mb-5">
+        <div class="col-md-6">
+          <h5>Backend</h5>
+          <ul class="list-unstyled">
+            <li>Django (Python)</li>
+          </ul>
+        </div>
+        <div class="col-md-6">
+          <h5>Frontend</h5>
+          <ul class="list-unstyled">
+            <li>Bootstrap 5</li>
+            <li>JavaScript/jQuery</li>
+          </ul>
+        </div>
+        <div class="col-md-6">
+          <h5>Database</h5>
+          <ul class="list-unstyled">
+            <li>SQLite (development)</li>
+            <li>PostgreSQL (production)</li>
+          </ul>
+        </div>
+        <div class="col-md-6">
+          <h5>Deployment</h5>
+          <ul class="list-unstyled">
+            <li>AWS Lambda with API Gateway</li>
+            <li>Amazon S3 for static files</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="text-center">
+        <h2 class="h3 mb-4">Get Started</h2>
+        <p class="mb-4">
+          Ready to start blogging? Sign up today and create your first post!
+        </p>
+        <a href="{% url 'account_signup' %}" class="btn btn-primary btn-lg"
+          >Sign Up Now</a
+        >
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock content %}

@@ -48,6 +48,7 @@ Resources:
       Environment:
         Variables:
           DJANGO_ENV: lambda
+          API_GATEWAY_DOMAIN: !Sub ${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com
           AWS_STORAGE_BUCKET_NAME: !Ref S3Bucket
           EMAIL_HOST: !Ref EmailHost
           EMAIL_HOST_USER: !Ref EmailHostUser

@@ -19,11 +19,6 @@ Globals:
     MemorySize: 1024
 
 Resources:
-  ServerlessRestApi:
-    Type: AWS::Serverless::Api
-    Properties:
-      StageName: $default
-
   DjangoFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -32,7 +27,6 @@ Resources:
         ApiEvent:
           Type: Api
           Properties:
-            RestApiId: !Ref ServerlessRestApi
             Path: /{proxy+}
             Method: ANY
       Policies:
@@ -48,7 +42,7 @@ Resources:
       Environment:
         Variables:
           DJANGO_ENV: lambda
-          API_GATEWAY_DOMAIN: !Sub ${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com
+          API_GATEWAY_DOMAIN: !Sub ${DjangoFunctionApiEvent}.execute-api.${AWS::Region}.amazonaws.com
           AWS_STORAGE_BUCKET_NAME: !Ref S3Bucket
           EMAIL_HOST: !Ref EmailHost
           EMAIL_HOST_USER: !Ref EmailHostUser
@@ -67,4 +61,4 @@ Resources:
 Outputs:
   ApiUrl:
     Description: API Gateway endpoint URL
-    Value: !Sub https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/
+    Value: !Sub https://${DjangoFunctionApiEvent}.execute-api.${AWS::Region}.amazonaws.com/

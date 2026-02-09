@@ -1,5 +1,5 @@
-{% extends '_base.html' %} {% block title %}About YoshiBlog{% endblock %} 
-{% block content %}
+{% extends '_base.html' %} {% block title %}About YoshiBlog{% endblock %} {%
+block content %}
 <div class="container my-5">
   <div class="row justify-content-center">
     <div class="col-lg-8">
@@ -51,10 +51,11 @@
 
       <h2 class="h3 mb-4">Our Mission</h2>
       <p class="mb-4">
-        YoshiBlog is designed to make blogging accessible and enjoyable. We
-        believe in the power of shared knowledge and community-driven content.
-        Our platform combines simplicity with powerful features to help creators
-        focus on what matters most - their stories and ideas.
+        YoshiBlog is a comprehensive Django project built for learning and
+        practice purposes. This platform demonstrates modern web development
+        techniques, including secure user input handling, AJAX interactions,
+        responsive design, and cloud deployment. It serves as a practical
+        example of building a full-featured blogging application with Django.
       </p>
 
       <h2 class="h3 mb-4">Technology Stack</h2>
@@ -87,6 +88,16 @@
           </ul>
         </div>
       </div>
+
+      <h2 class="h3 mb-4">Security & Sanitization</h2>
+      <p class="mb-4">
+        User security is paramount in YoshiBlog. We use <strong>nh3</strong>, a
+        Python library for HTML sanitization, to clean and validate all
+        user-generated content. This prevents cross-site scripting (XSS) attacks
+        and ensures that malicious HTML or JavaScript cannot be injected into
+        blog posts, comments, or other user inputs. nh3 provides fast, secure
+        sanitization while preserving legitimate formatting.
+      </p>
 
       <div class="text-center">
         <h2 class="h3 mb-4">Get Started</h2>

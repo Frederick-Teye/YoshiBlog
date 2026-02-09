@@ -69,33 +69,23 @@ function submitLike(commentLikeButtonObject) {
 
 // Function to share the blog post
 function shareBlogPost(title, url) {
-  console.log("shareBlogPost called with title:", title, "url:", url);
   if (navigator.share) {
-    console.log("Using navigator.share");
     navigator
       .share({
         title: title,
         url: url,
       })
-      .then(() => {
-        console.log("Share successful");
-      })
-      .catch((error) => {
-        console.error("Share failed:", error);
-      });
+      .catch(console.error);
   } else {
-    console.log("Navigator.share not available, trying clipboard");
     // Fallback: copy to clipboard
     navigator.clipboard
       .writeText(url)
       .then(function () {
-        console.log("Link copied to clipboard");
         alert("Link copied to clipboard: " + url);
       })
       .catch(function (err) {
         console.error("Failed to copy:", err);
         // Fallback: open a new window or something
-        console.log("Opening mailto");
         window.open(
           "mailto:?subject=" +
             encodeURIComponent(title) +

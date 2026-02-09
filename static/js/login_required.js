@@ -29,11 +29,13 @@ $(document).ready(function () {
   autoExpandTextArea();
 });
 
-const addBlogContainer = document.getElementById("text-field-container");
+$(document).on('click', '.share-btn a', function(e) {
+    e.preventDefault();
+    var title = $(this).data('title');
+    var url = $(this).data('url');
+    shareBlogPost(title, url);
+});
 
-if (addBlogContainer) {
-  addBlogContainer.addEventListener("click", function () {
-    let nextHref = window.location.href;
     window.location.href = "/accounts/login/?next=" + nextHref;
   });
 }

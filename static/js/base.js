@@ -55,6 +55,13 @@ $(document).ready(function () {
   handleListViewLike();
 });
 
+$(document).on("click", ".share-btn a", function (e) {
+  e.preventDefault();
+  var title = $(this).data("title");
+  var url = $(this).data("url");
+  shareBlogPost(title, url);
+});
+
 const addBlogContainer = document.getElementById("text-field-container");
 
 if (addBlogContainer) {

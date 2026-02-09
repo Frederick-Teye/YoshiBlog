@@ -53,17 +53,11 @@
   </div>
   <div class="col-xs-6 col-sm-8 row d-flex justify-content-center item-b">
     <div class="col-sm-10 align-self-center">
-        {% if did_user_comment %} 
-            {% if total_comments_minus_1 > 1 %} You and {{ total_comments_minus_1 }} 
-                other{{ total_comments_minus_1|pluralize}} comment 
-            {% endif %} 
-        {% else %} 
-            {% if total_comments > 0 %} 
-                {{ total_comments }} Other{{ total_comments|pluralize }} comment 
-            {% else %}
-                There are no comments 
-            {% endif %} 
-        {% endif %}
+      {% if did_user_comment %} {% if total_comments_minus_1 > 1 %} You and {{
+      total_comments_minus_1 }} other{{ total_comments_minus_1|pluralize}}
+      comment {% endif %} {% else %} {% if total_comments > 0 %} {{
+      total_comments }} Other{{ total_comments|pluralize }} comment {% else %}
+      There are no comments {% endif %} {% endif %}
     </div>
   </div>
   <div class="col-xs-2 col-sm-2 item-c share-btn">
@@ -71,7 +65,8 @@
       href="#"
       class="text-decoration-none"
       style="color: black"
-      onclick="shareBlogPost('{{ blog.title }}', '{{ request.build_absolute_uri }}'); event.preventDefault();"
+      data-title="{{ blog.title }}"
+      data-url="{{ request.build_absolute_uri }}"
     >
       <i class="bi bi-send me-2" style="font-size: 1.2em"></i>
       <span class="icon-label"> Share</span>

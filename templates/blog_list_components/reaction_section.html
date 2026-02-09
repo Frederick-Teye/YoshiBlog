@@ -68,7 +68,8 @@
       href=""
       class="text-decoration-none"
       style="color: black"
-      onclick="shareBlogPost('{{ blog.title }}', '{{ request.scheme }}://{{ request.get_host }}{% url 'blog_detail' blog.pk blog.slug %}'); event.preventDefault();"
+      data-title="{{ blog.title }}"
+      data-url="{{ request.scheme }}://{{ request.get_host }}{% url 'blog_detail' blog.pk blog.slug %}"
     >
       <i class="bi bi-send me-2" style="font-size: 1.2em"></i>
       <span class="icon-label"> Share</span>

@@ -133,3 +133,68 @@ textarea.no-scrollbars {
   overflow: hidden;
   outline: none;
 }
+
+
+/* Login Page Specific Styling */
+.login-container {
+    max-width: 450px;
+    margin: 4rem auto;
+}
+
+.login-card {
+    padding: 2.5rem;
+    border-radius: 1rem;
+    background-color: var(--bs-tertiary-bg);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Brand Buttons */
+.btn-social {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-weight: 500;
+    transition: transform 0.2s ease;
+    border: none;
+    height: 48px;
+}
+
+.btn-social:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+}
+
+.btn-github {
+    background-color: #24292e;
+    color: white !important;
+}
+
+.btn-google {
+    background-color: #ffffff;
+    color: #444 !important;
+}
+
+/* Separator Line */
+.login-separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 1.5rem 0;
+    color: #6c757d;
+}
+
+.login-separator::before,
+.login-separator::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #444;
+}
+
+.login-separator:not(:empty)::before {
+    margin-right: .5em;
+}
+
+.login-separator:not(:empty)::after {
+    margin-left: .5em;
+}

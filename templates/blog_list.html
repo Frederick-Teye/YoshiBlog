@@ -29,7 +29,7 @@
                         </div>
                         <div id="text-field-container" aria-label="Click to add blog post" class="ps-3 pt-1 col-11 col-sm-11 item-e">
                             <a href="{% url 'blog_new' %}" aria-hidden="true" id="add-blog-link">
-                                What's on your mind {{ request.user.first_name }}?
+                                What's on your mind {{ request.user.first_name|default:"guest" }}?
                             </a>
                         </div>
                     </div>

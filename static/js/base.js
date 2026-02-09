@@ -1,65 +1,39 @@
 $(document).ready(function () {
-  function handleDetailViewLike() {
-    $(document).on("click", "#detail-view-like", function () {
-      var pk = $(this).data("id");
-      var csrfToken = $(this).data("csrf-token");
-
-      $.ajax({
-        type: "POST",
-        url: $(this).data("href"),
-        headers: {
-          "X-CSRFToken": csrfToken,
-        },
-        data: {
-          blog_id: pk,
-        },
-        success: function (data) {
-          var id = "#blog_" + pk + "_detail_reaction_section";
-          $(id).html(data);
-        },
-        error: function (rs, e) {
-          console.log(rs.responseText);
-        },
-      });
+  // Detail View Like (AJAX)
+  $(document).on("click", "#detail-view-like", function () {
+    var pk = $(this).data("id");
+    var csrfToken = $(this).data("csrf-token");
+    $.ajax({
+      type: "POST",
+      url: $(this).data("href"),
+      headers: { "X-CSRFToken": csrfToken },
+      data: { blog_id: pk },
+      success: function (data) {
+        $("#blog_" + pk + "_detail_reaction_section").html(data);
+      },
     });
-  }
+  });
 
-  function handleListViewLike() {
-    $(document).on("click", ".blog-like-section", function () {
-      var $this = $(this);
-      var pk = $this.data("id");
-      var csrfToken = $this.data("csrf-token");
-      let urlRoute = $this.data("href");
-
-      $.ajax({
-        type: "POST",
-        url: urlRoute,
-        headers: {
-          "X-CSRFToken": csrfToken,
-        },
-        data: {
-          blog_id: pk,
-        },
-        success: function (data) {
-          var id = "#blog_" + pk + "_list_item_reaction_section";
-          $(id).html(data);
-        },
-        error: function (rs, e) {
-          console.log(rs.responseText);
-        },
-      });
+  // List View Like (AJAX)
+  $(document).on("click", ".blog-like-section", function () {
+    var pk = $(this).data("id");
+    var csrfToken = $(this).data("csrf-token");
+    $.ajax({
+      type: "POST",
+      url: $(this).data("href"),
+      headers: { "X-CSRFToken": csrfToken },
+      data: { blog_id: pk },
+      success: function (data) {
+        $("#blog_" + pk + "_list_item_reaction_section").html(data);
+      },
     });
-  }
-
-  handleDetailViewLike();
-  handleListViewLike();
+  });
 });
 
+// Shared Share Logic
 $(document).on("click", ".share-btn a", function (e) {
   e.preventDefault();
-  var title = $(this).data("title");
-  var url = $(this).data("url");
-  shareBlogPost(title, url);
+  shareBlogPost($(this).data("title"), $(this).data("url"));
 });
 
 const addBlogContainer = document.getElementById("text-field-container");
@@ -69,11 +43,6 @@ if (addBlogContainer) {
     document.getElementById("add-blog-link").click();
   });
 }
-
-// Delete blog in blog list view
-// function deleteBlog(id){
-//      document.getElementById('delete-blog-link-'+id).click();
-// }
 
 window.addEventListener("resize", changeCommentFieldText);
 const commentFieldText = document.getElementsByClassName("comment-text-field");
@@ -91,58 +60,28 @@ function changeCommentFieldText() {
 
 function submitCommentForm(formObject) {
   const form = $(formObject);
-  let urlRoute = $(formObject).data("href");
-  let blog_pk = $(formObject).data("id");
-
+  const blog_pk = form.data("id");
   $.ajax({
     type: "POST",
-    url: urlRoute,
-    data: $(form).serialize(),
-
+    url: form.data("href"),
+    data: form.serialize(),
     success: function (data) {
-      var commentSection = $("#comment-section-" + blog_pk);
-      // Get the value of the data-has-comments attribute
-      var hasComments = commentSection.data("has-comments");
-      // Check if there are comments
-      if (hasComments === true) {
-        commentSection.prepend(data);
+      const section = $("#comment-section-" + blog_pk);
+      if (section.data("has-comments") === true) {
+        section.prepend(data);
       } else {
-        hasComments = true;
-        commentSection.html(data);
+        section.html(data).data("has-comments", true);
       }
-    },
-    error: function (rs, e) {
-      console.log(rs.responseText);
+      form.trigger("reset"); // Clear the box after posting
     },
   });
-  return false; // Prevent form submission
+  return false;
 }
 
-// Function to share the blog post
 function shareBlogPost(title, url) {
   if (navigator.share) {
-    navigator
-      .share({
-        title: title,
-        url: url,
-      })
-      .catch(console.error);
+    navigator.share({ title: title, url: url }).catch(console.error);
   } else {
-    // Fallback: copy to clipboard
-    navigator.clipboard
-      .writeText(url)
-      .then(function () {
-        alert("Link copied to clipboard: " + url);
-      })
-      .catch(function (err) {
-        console.error("Failed to copy:", err);
-        // Fallback: open a new window or something
-        window.open(
-          "mailto:?subject=" +
-            encodeURIComponent(title) +
-            "&body=" +
-            encodeURIComponent(url),
-        );
-      });
+    navigator.clipboard.writeText(url).then(() => alert("Link copied!"));
   }
 }

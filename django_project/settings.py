@@ -323,6 +323,12 @@ logging.config.dictConfig(
 
 TAGGIT_CASE_INSENSITIVE = True
 
+SECURE_PROXY_SSL_HEADER = None
+SECURE_SSL_REDIRECT = False
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
+USE_X_FORWARDED_HOST = False
+USE_X_FORWARDED_PORT = False
 
 if IS_LAMBDA:
     # Tell Django it is behind a proxy that handles HTTPS
@@ -330,3 +336,5 @@ if IS_LAMBDA:
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
+    USE_X_FORWARDED_HOST = True
+    USE_X_FORWARDED_PORT = True

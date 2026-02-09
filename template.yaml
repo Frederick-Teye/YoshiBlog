@@ -49,6 +49,8 @@ Resources:
       Environment:
         Variables:
           DJANGO_ENV: lambda
+          ADMIN_EMAIL_PATH: "/yoshiblog/admin_email"
+          ADMIN_PASSWORD_PATH: "/yoshiblog/admin_password"
           AWS_STORAGE_BUCKET_NAME: !Ref S3Bucket
           EMAIL_HOST: !Ref EmailHost
           EMAIL_HOST_USER: !Ref EmailHostUser

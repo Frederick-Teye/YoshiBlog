@@ -114,3 +114,22 @@ function submitCommentForm(formObject){
     });
 }
 
+// Function to share the blog post
+function shareBlogPost(title, url) {
+  if (navigator.share) {
+    navigator.share({
+      title: title,
+      url: url
+    }).catch(console.error);
+  } else {
+    // Fallback: copy to clipboard
+    navigator.clipboard.writeText(url).then(function() {
+      alert('Link copied to clipboard: ' + url);
+    }).catch(function(err) {
+      console.error('Failed to copy: ', err);
+      // Fallback: open a new window or something
+      window.open('mailto:?subject=' + encodeURIComponent(title) + '&body=' + encodeURIComponent(url));
+    });
+  }
+}
+

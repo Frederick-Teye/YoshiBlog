@@ -1,0 +1,13 @@
+version = 0.1
+
+[default.deploy.parameters]
+stack_name = "yoshiblog-stack"
+resolve_s3 = true
+s3_prefix = "yoshiblog-stack"
+resolve_image_repos = true
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+parameter_overrides = "EmailHost=\"smtp.gmail.com\" EmailHostUser=\"jay09peterson@gmail.com\" DefaultFromEmail=\"jay09peterson@gmail.com\""
+
+[default.global.parameters]
+region = "us-east-1"

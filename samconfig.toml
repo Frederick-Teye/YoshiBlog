@@ -8,6 +8,7 @@ resolve_image_repos = true
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
 parameter_overrides = "EmailHost=\"smtp.gmail.com\" EmailHostUser=\"jay09peterson@gmail.com\" DefaultFromEmail=\"jay09peterson@gmail.com\""
+disable_rollback = true
 
 [default.global.parameters]
 region = "us-east-1"

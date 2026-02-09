@@ -36,15 +36,17 @@ else:
 DEBUG = not IS_PROD
 
 allowed_hosts_env = os.environ.get("ALLOWED_HOSTS")
-if allowed_hosts_env:
-    ALLOWED_HOSTS = [
-        host.strip() for host in allowed_hosts_env.split(",") if host.strip()
-    ]
-elif IS_LAMBDA:
-    api_gateway_domain = os.environ.get("API_GATEWAY_DOMAIN")
-    ALLOWED_HOSTS = [api_gateway_domain] if api_gateway_domain else ["*"]
+
+ALLOWED_HOSTS = None
+
+# If running on Lambda
+if os.environ.get("DJANGO_ENV") == "lambda":
+    # API Gateway passes the domain in the headers.
+    # For simplicity on Lambda, you can allow all hosts or
+    # specifically '.execute-api.us-east-1.amazonaws.com'
+    ALLOWED_HOSTS = ["*"]
 else:
-    ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]
+    ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 csrf_trusted_env = os.environ.get("CSRF_TRUSTED_ORIGINS")
 if csrf_trusted_env:

@@ -1,36 +1,36 @@
 {% load custom_tags %}
 
 <div class="row d-flex" id="grid-container">
-    <div class="col-xs-2 col-sm-2 item-a like-btn" data-id="{{ comment.id }}"
-        data-csrf-token="{{ csrf_token }}" data-href="{% url 'comment_like' blog.pk blog.slug comment.pk %}" onclick="submitLike(this)">
-        <div>
-            {% user_likes_comment comment.pk as user_liked_comment %}
+  <div
+    class="col-xs-2 col-sm-2 item-a like-btn"
+    data-id="{{ comment.id }}"
+    data-csrf-token="{{ csrf_token }}"
+    data-href="{% url 'comment_like' blog.pk blog.slug comment.pk %}"
+    onclick="submitLike(this)"
+  >
+    <div>
+      {% user_likes_comment comment.pk as user_liked_comment %} 
+      {% if user_liked_comment %}
 
-            {% if user_liked_comment %}
+      <div style="color: rgb(62, 177, 244)" class="d-flex align-items-center">
+        <i class="bi bi-hand-thumbs-up-fill me-2" style="font-size: 1.2em"></i>
 
-            <div style="color:  rgb(62, 177, 244);">
-                <i class="bi bi-hand-thumbs-up-fill me-2" style="font-size: 1.2em;"></i>
-              
-                <span>
-                    {% total_comment_likes comment.pk %}
-                </span>
-            </div>
+        <span> {% total_comment_likes comment.pk %} </span>
+      </div>
 
-            {% else %}
+      {% else %}
 
-            <div style="color: black;">
-                <i class="bi bi-hand-thumbs-up me-2" style="font-size: 1.2em;"></i>               
-                <span>
-                    {% total_comment_likes comment.pk as total_comment_likes_var %}
+      <div style="color: black" class="d-flex align-items-center">
+        <i class="bi bi-hand-thumbs-up me-2" style="font-size: 1.2em"></i>
+        <span>
+          {% total_comment_likes comment.pk as total_comment_likes_var %} 
+          {% if total_comment_likes_var > 0 %} 
+            {% total_comment_likes comment.pk %} 
+          {% endif %}
+        </span>
+      </div>
 
-                    {% if total_comment_likes_var  > 0 %}
-                    {% total_comment_likes comment.pk %}
-                    {% endif %}
-                </span>
-            </div>
-
-            {% endif %}
-        </div>
+      {% endif %}
     </div>
-    
+  </div>
 </div>

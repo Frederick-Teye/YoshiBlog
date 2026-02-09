@@ -1,56 +1,77 @@
 {% load custom_tags %}
 
 <div class="row d-flex justify-content-center" id="grid-container">
-    <div class="col-xs-2 col-sm-2 item-a like-btn blog-like-section" data-id="{{ blog.pk }}" data-csrf-token="{{ csrf_token }}" data-href="{% url 'list_blog_like' blog.pk %}">
-        <div>
-            {% user_likes_blog blog.pk as user_likes %}
-            {% if user_likes %}
-        
-            <button type="button" class="btn btn-link text-decoration-none position-relative"
-                style="color:  rgb(62, 177, 244);">
-        
-                <i class="bi bi-hand-thumbs-up-fill me-2" style="font-size: 1.2em;"></i>
-                <span class="icon-label"> Unlike</span>
-        
-                {% total_blog_likes blog.pk as total_likes %}
-                {% if total_likes %}
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        {% total_blog_likes blog.pk %}
-                    </span>
-                {% endif %}
-        
-            </button>
-        
-            {% else %}
-        
-            <button type="button" class="btn btn-link text-decoration-none position-relative" style="color: black;">
-                <i class="bi bi-hand-thumbs-up me-2" style="font-size: 1.2em;"></i>
-                <span class="icon-label"> Like</span>
-                
-                {% total_blog_likes blog.pk as total_likes %}
-                {% if total_likes %}
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        {% total_blog_likes blog.pk %}
-                    </span>
-                {% endif %}
-            </button>
-        
-            {% endif %}
-        </div>
+  <div
+    class="col-xs-2 col-sm-2 item-a like-btn blog-like-section"
+    data-id="{{ blog.pk }}"
+    data-csrf-token="{{ csrf_token }}"
+    data-href="{% url 'list_blog_like' blog.pk %}"
+  >
+    <div>
+      {% user_likes_blog blog.pk as user_likes %} {% if user_likes %}
+
+      <button
+        type="button"
+        class="btn btn-link text-decoration-none position-relative"
+        style="color: rgb(62, 177, 244)"
+      >
+        <i class="bi bi-hand-thumbs-up-fill me-2" style="font-size: 1.2em"></i>
+        <span class="icon-label"> Unlike</span>
+
+        {% total_blog_likes blog.pk as total_likes %} {% if total_likes %}
+        <span
+          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+        >
+          {% total_blog_likes blog.pk %}
+        </span>
+        {% endif %}
+      </button>
+
+      {% else %}
+
+      <button
+        type="button"
+        class="btn btn-link text-decoration-none position-relative"
+        style="color: black"
+      >
+        <i class="bi bi-hand-thumbs-up me-2" style="font-size: 1.2em"></i>
+        <span class="icon-label"> Like</span>
+
+        {% total_blog_likes blog.pk as total_likes %} {% if total_likes %}
+        <span
+          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+        >
+          {% total_blog_likes blog.pk %}
+        </span>
+        {% endif %}
+      </button>
+
+      {% endif %}
     </div>
-    <div class="col-xs-6 col-sm-8 row d-flex justify-content-center item-b">
-        <div class="col-sm-10 align-self-center comment-text-field" id="comment-text-field">
-            <a href="{{ blog.pk }}/{{ blog.slug }}/#comment-input-box-{{ blog.pk }}" aria-label="Click to add comment" class="text-decoration-none text-secondary">
-                <span aria-hidden="true">
-                    Write your comment here...
-                </span>
-            </a>
-        </div>
+  </div>
+  <div class="col-xs-6 col-sm-8 row d-flex justify-content-center item-b">
+    <div
+      class="col-sm-10 align-self-center comment-text-field"
+      id="comment-text-field"
+    >
+      <a
+        href="{{ blog.pk }}/{{ blog.slug }}/#comment-input-box-{{ blog.pk }}"
+        aria-label="Click to add comment"
+        class="text-decoration-none text-secondary"
+      >
+        <span aria-hidden="true"> Write your comment here... </span>
+      </a>
     </div>
-    <div class="col-xs-2 col-sm-2 item-c share-btn">
-        <a href="" class="text-decoration-none" style="color: black;" onclick="shareBlogPost('{{ blog.title }}', '{{ request.build_absolute_uri|slice:": -1" }}{% url "blog_detail" blog.pk blog.slug %}'); event.preventDefault();">
-            <i class="bi bi-send me-2" style="font-size: 1.2em;"></i>
-            <span class="icon-label"> Share</span>
-        </a>
-    </div>
+  </div>
+  <div class="col-xs-2 col-sm-2 item-c share-btn">
+    <a
+      href=""
+      class="text-decoration-none"
+      style="color: black"
+      onclick="shareBlogPost('{{ blog.title }}', '{{ request.scheme }}://{{ request.get_host }}{% url 'blog_detail' blog.pk blog.slug %}'); event.preventDefault();"
+    >
+      <i class="bi bi-send me-2" style="font-size: 1.2em"></i>
+      <span class="icon-label"> Share</span>
+    </a>
+  </div>
 </div>

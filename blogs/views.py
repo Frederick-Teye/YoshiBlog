@@ -126,10 +126,20 @@ def blog_like_view(request, pk):
         blog.likes.add(request.user)
         is_liked = True
 
+    total_comments = blog.comments.count()
+    total_likes = blog.likes.count()
+    if request.user.is_authenticated:
+        did_user_comment = blog.comments.filter(author=request.user).exists()
+    else:
+        did_user_comment = False
+
     context = {
         "blog": blog,
         "is_liked": is_liked,
-        "total_likes": blog.likes.count(),
+        "total_likes": total_likes,
+        "total_comments": total_comments,
+        "total_comments_minus_1": total_comments - 1,
+        "did_user_comment": did_user_comment,
     }
 
     if request.path_info == "/blogs/" + str(pk) + "/like/":

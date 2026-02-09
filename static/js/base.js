@@ -108,6 +108,7 @@ function submitCommentForm(formObject) {
       console.log(rs.responseText);
     },
   });
+  return false; // Prevent form submission
 }
 
 // Function to share the blog post

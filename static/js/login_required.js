@@ -57,6 +57,7 @@ function submitCommentForm(formObject) {
   let blog_pk = formObject.getAttribute("data-id");
   let formId = "#comment-input-box-" + blog_pk;
   window.location.href = "/accounts/login/?next=" + nextHref + formId;
+  return false; // Prevent form submission
 }
 
 function submitLike(commentLikeButtonObject) {

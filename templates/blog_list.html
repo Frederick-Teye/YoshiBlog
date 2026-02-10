@@ -1,88 +1,98 @@
-{% extends '_base.html' %}
-{% block title %} Blogs {% endblock title %}
-
+{% extends '_base.html' %} 
+{% block title %} Blogs {% endblock title %} 
 {% block content %}
 
+<!--Had to add it here because it wasn't working in the _base.html file-->
+<!-- JQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
-    <!--Had to add it here because it wasn't working in the _base.html file-->
-    <!-- JQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-
-
-    <div class="row my-4">
-        <section class="col-sm-3">
-            <!--Add tags here-->
-            <span>Tags</span>
-            {% for tag in tags %}
-                {% if tag is not None %}
-                <div><a href="{% url 'list_blog_tagged' tag %}">{{ tag }}</a></div>
-                {% endif %}
-            {% endfor %}
-        </section>
-        <section class="col-sm-9">
-                <div class="row mb-4">
-                    <div class="row flex-container" id="grid-container-2">
-                        <div class="col-1 col-sm-1 item-d">
-                            <div class="">
-                                <i class="bi bi-person-circle" style="font-size: 2.5em; color: black;"></i>
-                            </div>
-                        </div>
-                        <div id="text-field-container" aria-label="Click to add blog post" class="ps-3 pt-1 col-11 col-sm-11 item-e">
-                            <a href="{% url 'blog_new' %}" aria-hidden="true" id="add-blog-link">
-                                What's on your mind {{ request.user.first_name|default:"guest" }}?
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    {% for blog in page_obj.object_list %}
-                    <article id="blog-{{ blog.pk }}" class="mb-4">
-                        {% include 'blog_list_components/blog_content.html' %}
-                    </article>
-                    {% empty %}
-                    <div>
-                        <p>Sorry, no blogs in this list.</p>
-                    </div>
-                    {% endfor %}
-                </div>
-        </section>
+<div class="row my-4">
+  <section class="col-sm-3">
+    <div class="card mb-4">
+      <div class="card-header">
+        <strong>Tags</strong>
+      </div>
+      <div class="card-body">
+        {% for tag in tags %} {% if tag %}
+        <a
+          href="{% url 'list_blog_tagged' tag %}"
+          class="badge bg-primary text-decoration-none me-1 mb-1"
+          >{{ tag }}</a
+        >
+        {% endif %} {% endfor %}
+      </div>
     </div>
+  </section>
+  <section class="col-sm-9">
+    <div class="row mb-4">
+      <div class="row flex-container" id="grid-container-2">
+        <div class="col-1 col-sm-1 item-d">
+          <div class="">
+            <i
+              class="bi bi-person-circle"
+              style="font-size: 2.5em; color: black"
+            ></i>
+          </div>
+        </div>
+        <div
+          id="text-field-container"
+          aria-label="Click to add blog post"
+          class="ps-3 pt-1 col-11 col-sm-11 item-e"
+        >
+          <a href="{% url 'blog_new' %}" aria-hidden="true" id="add-blog-link">
+            What's on your mind {{ request.user.first_name|default:"guest" }}?
+          </a>
+        </div>
+      </div>
+    </div>
+    <div>
+      {% for blog in page_obj.object_list %}
+      <article id="blog-{{ blog.pk }}" class="mb-4">
+        {% include 'blog_list_components/blog_content.html' %}
+      </article>
+      {% empty %}
+      <div>
+        <p>Sorry, no blogs in this list.</p>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+</div>
 
-
-    <nav aria-label="Blog pages">
-        <ul class="pagination justify-content-center">
-            {% if page_obj.has_previous %}
-            <li class="page-item">
-                <a href="?page=1" class="page-link">&laquo; first</a>
-            </li>
-            <li class="page-item">
-                <a href="?page={{ page_obj.previous_page_number }}" class="page-link">Previous</a>
-            </li>
-            {% endif %}
-
-            {% for num in page_obj.paginator.page_range %}
-            {% if num == page_obj.number %}
+<nav aria-label="Blog pages">
+  <ul class="pagination justify-content-center">
+    {% if page_obj.has_previous %}
+    <li class="page-item">
+      <a href="?page=1" class="page-link">&laquo; first</a>
+    </li>
+    <li class="page-item">
+      <a href="?page={{ page_obj.previous_page_number }}" class="page-link"
+        >Previous</a
+      >
+    </li>
+    {% endif %} 
+    {% for num in page_obj.paginator.page_range %} 
+        {% if num == page_obj.number %}
             <li class="page-item active" aria-current="page">
-                <a class="page-link">{{ num }}</a>
+            <a class="page-link">{{ num }}</a>
             </li>
-
-            {% else %}
+        {% else %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
             </li>
-            {% endif %}
-            {% endfor %}
-
-            {% if page_obj.has_next %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
-            </li>
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-            </li>
-            {% endif %}
-            
-        </ul>
-    </nav>
+        {% endif %} 
+    {% endfor %} 
+    {% if page_obj.has_next %}
+    <li class="page-item">
+      <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+    </li>
+    <li class="page-item">
+      <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}"
+        >last &raquo;</a
+      >
+    </li>
+    {% endif %}
+  </ul>
+</nav>
 
 {% endblock content %}

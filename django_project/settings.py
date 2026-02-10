@@ -258,13 +258,19 @@ DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL") or config(
 
 # Admin credentials
 ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL") or config("ADMIN_EMAIL", default="")
-ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD") or config("ADMIN_PASSWORD", default="")
+ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD") or config(
+    "ADMIN_PASSWORD", default=""
+)
 
 if IS_LAMBDA:
     # Attempt to fetch email credentials from SSM if in Lambda
     try:
-        ADMIN_EMAIL = get_ssm_param(os.environ.get("ADMIN_EMAIL_PATH", "/yoshiblog/admin_email"))
-        ADMIN_PASSWORD = get_ssm_param(os.environ.get("ADMIN_PASSWORD_PATH", "/yoshiblog/admin_password"))
+        ADMIN_EMAIL = get_ssm_param(
+            os.environ.get("ADMIN_EMAIL_PATH", "/yoshiblog/admin_email")
+        )
+        ADMIN_PASSWORD = get_ssm_param(
+            os.environ.get("ADMIN_PASSWORD_PATH", "/yoshiblog/admin_password")
+        )
         EMAIL_HOST = get_ssm_param("/yoshiblog/email_host") or EMAIL_HOST
         EMAIL_HOST_USER = get_ssm_param("/yoshiblog/email_host_user") or EMAIL_HOST_USER
         EMAIL_HOST_PASSWORD = (

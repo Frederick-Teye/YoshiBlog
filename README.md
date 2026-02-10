@@ -13,6 +13,10 @@ A modern, scalable blog application built with Django, featuring user authentica
 - **Security**: Input sanitization, CSRF protection, and secure password handling
 - **Serverless Deployment**: AWS Lambda with API Gateway for scalable hosting
 
+## 🌐 Live Demo
+
+Check out the live version of YoshiBlog: [https://k5tb26hid6.execute-api.us-east-1.amazonaws.com/](https://k5tb26hid6.execute-api.us-east-1.amazonaws.com/)
+
 ## 🛠 Tech Stack
 
 - **Backend**: Django 5.1, Python 3.11

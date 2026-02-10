@@ -16,5 +16,10 @@ ENV AWS_LWA_PORT=8000
 ENV AWS_LWA_READINESS_CHECK_PATH=/
 ENV AWS_LWA_ASYNC_INIT=true
 
+# Make the script executable
+RUN chmod +x run.sh
+
 EXPOSE 8000
-CMD ["gunicorn", "django_project.wsgi:application", "--bind", "0.0.0.0:8000"]
+
+# Change the CMD to execute our script
+CMD ["./run.sh"]

@@ -53,6 +53,8 @@
     <div
       class="col-sm-10 align-self-center comment-text-field"
       id="comment-text-field"
+      style="cursor: pointer"
+      onclick="this.querySelector('a').click()"
     >
       <a
         href="{{ blog.pk }}/{{ blog.slug }}/#comment-input-box-{{ blog.pk }}"
@@ -64,9 +66,13 @@
     </div>
   </div>
   <div class="col-xs-2 col-sm-2 item-c share-btn">
-    <a href="#" class="text-decoration-none" style="color: black"
-    data-title="{{ blog.title }}"
-    data-url="{{ request.scheme }}://{{ request.get_host }}{% url 'blog_detail' blog.pk blog.slug %}">
+    <a
+      href="#"
+      class="text-decoration-none"
+      style="color: black"
+      data-title="{{ blog.title }}"
+      data-url="{{ request.scheme }}://{{ request.get_host }}{% url 'blog_detail' blog.pk blog.slug %}"
+    >
       <i class="bi bi-send me-2" style="font-size: 1.2em"></i>
       <span class="icon-label"> Share</span>
     </a>

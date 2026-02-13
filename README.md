@@ -25,7 +25,7 @@ Check out the live version of YoshiBlog: [https://k5tb26hid6.execute-api.us-east
 - **Authentication**: Django Allauth with social providers
 - **Deployment**: AWS SAM, Lambda, API Gateway, S3
 - **Containerization**: Docker
-- **Other**: Redis (caching), boto3 (AWS SDK), nh3 (HTML sanitization)
+- **Other**: boto3 (AWS SDK), nh3 (HTML sanitization)
 
 ## 🏗 Architecture
 

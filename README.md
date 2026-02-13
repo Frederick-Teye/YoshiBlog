@@ -51,7 +51,7 @@ YoshiBlog follows a serverless architecture for high scalability and low mainten
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/yoshiblog.git
+   git clone git@github.com:Frederick-Teye/YoshiBlog.git
    cd yoshiblog
    ```
 
@@ -136,12 +136,9 @@ Set the following in AWS SSM Parameter Store:
 4. Push to branch: `git push origin feature-name`
 5. Submit a pull request
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 👨‍💻 About the Author
 
 I'm a Computer Science student with over 3 years of programming experience, specializing in web development and cloud technologies. I completed the AWS Cloud Practitioner (CCP) training through AmaliTech and hold the certification. Currently preparing for the AWS Developer Associate exam, I built YoshiBlog to demonstrate practical skills in full-stack development, serverless architecture, and DevOps practices.
 
-Connect with me on [LinkedIn](https://linkedin.com/in/yourprofile) or check out my other projects!
+Connect with me on [LinkedIn](https://www.linkedin.com/in/frederick-teye-61627b248/) or check out my other projects!

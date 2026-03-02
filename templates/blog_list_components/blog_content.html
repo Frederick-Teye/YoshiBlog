@@ -5,10 +5,16 @@
         <div class="card-body">
             <div class="row mb-4" id="grid-container">
                 <div class="col-sm-1 item-a">
-                    <i class="bi bi-person-circle" style="font-size: 2.5em; color: black;"></i>
+                    <a href="{% url 'profile_detail' blog.author.username %}">
+                        <i class="bi bi-person-circle" style="font-size: 2.5em; color: black;"></i>
+                    </a>
                 </div>
                 <div class="card-subtitle text-body-secondary col-sm-10 text-start d-flex flex-column pt-3 item-b">
-                    <div class="fw-bold h6 mb-0">{{ blog.author.get_full_name|default:blog.author.username }}</div>
+                    <div class="fw-bold h6 mb-0">
+                        <a href="{% url 'profile_detail' blog.author.username %}" class="text-decoration-none text-dark">
+                            {{ blog.author.get_full_name|default:blog.author.username }}
+                        </a>
+                    </div>
                     <div>{{ blog.date|date:"l, jS F Y, f A" }}</div>
                 </div>
                 <div class="col-sm-1 item-c">

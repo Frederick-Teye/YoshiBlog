@@ -3,7 +3,16 @@
 <div class="container mt-4" style="width: 80%;">
     <div class="row mb-4" id="grid-container">
         <div class="col-sm-1 item-a my-auto">
-            <i class="bi bi-person-circle" style="font-size: 2.2em; color: black;"></i>
+            <a href="{% url 'profile_detail' comment.author.username %}" class="text-decoration-none">
+                {% if comment.author.avatar_url %}
+                    <img src="{{ comment.author.avatar_url }}" 
+                        alt="{{ comment.author.get_full_name }}'s Profile Picture" 
+                        class="rounded-circle" 
+                        style="width: 2.5em; height: 2.5em; object-fit: cover;">
+                {% else %}
+                    <i class="bi bi-person-circle" style="font-size: 2.5em; color: black;"></i>
+                {% endif %}
+            </a>
         </div>
         <div class="text-body-secondary col-sm-10 text-start d-flex flex-column pt-2 item-b">
             <div class="fw-bold h6 mb-0">{{ comment.author.get_full_name|default:":comment.author.username" }}</div>

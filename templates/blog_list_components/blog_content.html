@@ -5,8 +5,15 @@
         <div class="card-body">
             <div class="row mb-4" id="grid-container">
                 <div class="col-sm-1 item-a">
-                    <a href="{% url 'profile_detail' blog.author.username %}">
-                        <i class="bi bi-person-circle" style="font-size: 2.5em; color: black;"></i>
+                    <a href="{% url 'profile_detail' blog.author.username %}" class="text-decoration-none">
+                        {% if blog.author.avatar_url %}
+                            <img src="{{ blog.author.avatar_url }}" 
+                                alt="{{ blog.author.get_full_name }}'s Profile Picture" 
+                                class="rounded-circle" 
+                                style="width: 2.5em; height: 2.5em; object-fit: cover;">
+                        {% else %}
+                            <i class="bi bi-person-circle" style="font-size: 2.5em; color: black;"></i>
+                        {% endif %}
                     </a>
                 </div>
                 <div class="card-subtitle text-body-secondary col-sm-10 text-start d-flex flex-column pt-3 item-b">
